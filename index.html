@@ -265,13 +265,14 @@ function mcq(k,list,title){
 function exam(k){
   const s=DATA[k];let deck=shuffle(s.exam),i=0;
   function render(){const it=deck[i];let marked=false;
+    const mk=it.m?`${it.m} mark${it.m>1?'s':''}`:'spoken practice';
     app.innerHTML=`<div class="narrow"><span class="back" onclick="subject('${k}')">← ${s.name}</span>
-      <div class="qmeta">Exam Practice · ${i+1}/${deck.length} · ${it.m} mark${it.m>1?'s':''}</div>
+      <div class="qmeta">Exam Practice · ${i+1}/${deck.length} · ${mk}</div>
       <div class="panel"><div class="q">${it.q}</div>
-        <textarea class="ta" id="ans" placeholder="Type your answer, then reveal the model answer to mark it…"></textarea>
+        <textarea class="ta" id="ans" placeholder="${it.m?'Type your answer, then reveal the model answer to mark it…':'Say your answer aloud, then reveal the model answer to compare…'}"></textarea>
         <button class="btn full" id="rev">Reveal model answer</button>
         <div id="model" style="display:none;margin-top:16px">
-          <div class="qmeta">Model answer · ${it.m} mark${it.m>1?'s':''}</div>
+          <div class="qmeta">Model answer · ${mk}</div>
           <div class="mans">${it.a}</div>
           <div class="qmeta" style="margin-top:16px">How did you do? (honest = better signal)</div>
           <div class="row" id="mark"><button class="chip good" data-v="1">Got it ✓</button><button class="chip" data-v="1">Partly</button><button class="chip bad" data-v="0">Missed ✗</button></div>

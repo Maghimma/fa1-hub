@@ -124,7 +124,7 @@ ict:{name:"ICT",code:"0417 · Ch5 + 6.1–6.5",blurb:"Effects of IT + Applicatio
 
 /* ================= PHYSICS · 0625 · Forces · Thermal · Waves ================= */
 phys:{name:"Physics",code:"0625 · Forces · Thermal · Waves",blurb:"Moments, pressure, heat, waves",
- papers:[{name:"Past papers (CIE 0625)",url:"https://pastpapers.co/cie/?dir=IGCSE/Physics-0625"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/physics/cie/"}],
+ papers:[{name:"🧪 Dabble sims (interactive)",url:"https://dabble-sim.vercel.app"},{name:"Past papers (CIE 0625)",url:"https://pastpapers.co/cie/?dir=IGCSE/Physics-0625"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/physics/cie/"}],
  cards:[
   {t:"Moments",f:"Moment — definition & formula",b:"Turning effect of a force about a pivot. <b>Moment = force × perpendicular distance</b> from the pivot. Unit: N·m."},
   {t:"Moments",f:"Everyday moment examples",b:"Door handle (force far from hinge), spanner, seesaw, scissors, crowbar, wheelbarrow — a longer distance gives a bigger moment for the same force."},
@@ -213,7 +213,18 @@ phys:{name:"Physics",code:"0625 · Forces · Thermal · Waves",blurb:"Moments, p
   {q:"Wavelength is measured…",o:["Crest to trough","Between two adjacent points in phase","From rest to crest","In hertz"],a:1,w:"e.g. crest to crest, in metres."},
   {q:"When a wave refracts into a new medium, what stays the same?",o:["Speed","Wavelength","Frequency","Direction"],a:2,w:"Frequency is unchanged; speed & wavelength change."},
   {q:"Diffraction is when waves…",o:["Bounce off a surface","Spread through a gap or round an edge","Speed up","Stop"],a:1,w:"Spreading; greatest when gap ≈ wavelength."},
-  {q:"Frequency × wavelength gives…",o:["Amplitude","Time period","Wave speed","Energy"],a:2,w:"v = fλ."}
+  {q:"Frequency × wavelength gives…",o:["Amplitude","Time period","Wave speed","Energy"],a:2,w:"v = fλ."},
+  {q:"A force of 20 N acts 0.6 m from a pivot. Moment?",o:["12 N·m","3.3 N·m","0.03 N·m","120 N·m"],a:0,w:"20 × 0.6 = 12 N·m."},
+  {q:"8 N acts 0.5 m left of a pivot. Balancing force 0.4 m right?",o:["6.4 N","10 N","4 N","16 N"],a:1,w:"8×0.5 = F×0.4 → F = 10 N."},
+  {q:"Spring k = 25 N/m, force 5 N. Extension?",o:["0.2 m","125 m","5 m","20 m"],a:0,w:"x = F/k = 5 ÷ 25 = 0.2 m."},
+  {q:"Extension 0.1 m, k = 300 N/m. Force?",o:["30 N","3000 N","3 N","0.0003 N"],a:0,w:"F = kx = 300 × 0.1 = 30 N."},
+  {q:"Force 50 N over area 0.2 m². Pressure?",o:["10 Pa","250 Pa","0.004 Pa","100 Pa"],a:1,w:"p = F/A = 50 ÷ 0.2 = 250 Pa."},
+  {q:"Pressure of liquid at 2 m (ρ=1000, g=10)?",o:["2000 Pa","20 000 Pa","200 Pa","200 000 Pa"],a:1,w:"ρgh = 1000×10×2 = 20 000 Pa."},
+  {q:"Energy to heat 3 kg by 20 °C (c = 4200)?",o:["252 000 J","63 000 J","12 600 J","840 J"],a:0,w:"E = mcΔθ = 3×4200×20 = 252 000 J."},
+  {q:"500 J raises 0.5 kg of metal by 2 °C. Specific heat capacity?",o:["500 J/kg°C","250 J/kg°C","1000 J/kg°C","2 J/kg°C"],a:0,w:"c = E ÷ (mΔθ) = 500 ÷ (0.5×2) = 500."},
+  {q:"Wave: f = 10 Hz, λ = 3 m. Speed?",o:["30 m/s","3.3 m/s","13 m/s","0.3 m/s"],a:0,w:"v = fλ = 10 × 3 = 30 m/s."},
+  {q:"Sound v = 340 m/s, f = 170 Hz. Wavelength?",o:["2 m","0.5 m","510 m","57 800 m"],a:0,w:"λ = v/f = 340 ÷ 170 = 2 m."},
+  {q:"A wave's time period is 0.5 s. Frequency?",o:["2 Hz","0.5 Hz","5 Hz","50 Hz"],a:0,w:"f = 1/T = 1 ÷ 0.5 = 2 Hz."}
  ],
  exam:[
   {q:"A spanner of length 0.25 m turns a nut with a force of 40 N applied at right angles to it. Calculate the moment.",m:2,a:"Moment = force × perpendicular distance = 40 × 0.25 = <b>10 N·m</b>."},
@@ -231,7 +242,7 @@ phys:{name:"Physics",code:"0625 · Forces · Thermal · Waves",blurb:"Moments, p
 
 /* ================= CHEMISTRY · 0620 ================= */
 chem:{name:"Chemistry",code:"0620 · Electricity + Stoichiometry",blurb:"Electrolysis + molar mass",
- papers:[{name:"Past papers (CIE 0620)",url:"https://pastpapers.co/cie/?dir=IGCSE/Chemistry-0620"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/chemistry/cie/"}],
+ papers:[{name:"🧪 Dabble sims (interactive)",url:"https://dabble-sim.vercel.app"},{name:"Past papers (CIE 0620)",url:"https://pastpapers.co/cie/?dir=IGCSE/Chemistry-0620"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/chemistry/cie/"}],
  cards:[
   {t:"Electrolysis",f:"What is electrolysis?",b:"The breakdown of an ionic compound (molten or in aqueous solution) using electricity, into its elements."},
   {t:"Electrolysis",f:"Key terms",b:"<b>Electrolyte</b> = ionic compound that conducts. <b>Anode</b> = positive electrode. <b>Cathode</b> = negative electrode. <b>Inert</b> electrode = doesn't react (platinum/carbon)."},
@@ -293,7 +304,19 @@ chem:{name:"Chemistry",code:"0620 · Electricity + Stoichiometry",blurb:"Electro
   {q:"Empirical formula is…",o:["The actual atoms","The simplest whole-number ratio of atoms","The molar mass","The mass in grams"],a:1,w:"Simplest ratio."},
   {q:"Mass of 0.5 mol NaCl (Mr 58.5):",o:["117 g","29.25 g","58.5 g","0.5 g"],a:1,w:"mass = moles × Mr = 0.5 × 58.5."},
   {q:"Cryolite is used in aluminium extraction to…",o:["Add colour","Lower the melting point (save energy)","Speed rusting","Remove oxygen"],a:1,w:"Dissolves Al₂O₃ at a lower temperature."},
-  {q:"Mr of Mg(NO₃)₂ (Mg=24,N=14,O=16):",o:["148","100","84","172"],a:0,w:"24 + 2(14+48) = 148."}
+  {q:"Mr of Mg(NO₃)₂ (Mg=24,N=14,O=16):",o:["148","100","84","172"],a:0,w:"24 + 2(14+48) = 148."},
+  {q:"Mr of NaOH (Na=23, O=16, H=1):",o:["40","23","57","39"],a:0,w:"23 + 16 + 1 = 40."},
+  {q:"Mr of CaCl₂ (Ca=40, Cl=35.5):",o:["75.5","111","151","80"],a:1,w:"40 + 2×35.5 = 111."},
+  {q:"Mr of glucose C₆H₁₂O₆ (C=12,H=1,O=16):",o:["180","90","168","192"],a:0,w:"72 + 12 + 96 = 180."},
+  {q:"Mr of KNO₃ (K=39, N=14, O=16):",o:["101","69","85","117"],a:0,w:"39 + 14 + 48 = 101."},
+  {q:"Moles in 20 g of NaOH (Mr 40):",o:["0.5","2","20","800"],a:0,w:"20 ÷ 40 = 0.5 mol."},
+  {q:"Moles in 9 g of water (Mr 18):",o:["0.5","2","9","162"],a:0,w:"9 ÷ 18 = 0.5 mol."},
+  {q:"Moles in 180 g of glucose (Mr 180):",o:["1","2","0.5","180"],a:0,w:"180 ÷ 180 = 1 mol."},
+  {q:"Mass of 3 mol of CO₂ (Mr 44):",o:["132 g","44 g","15 g","88 g"],a:0,w:"3 × 44 = 132 g."},
+  {q:"Mass of 0.25 mol of CaCO₃ (Mr 100):",o:["25 g","400 g","100 g","2.5 g"],a:0,w:"0.25 × 100 = 25 g."},
+  {q:"% by mass of oxygen in H₂O (Mr 18):",o:["11.1%","88.9%","50%","16%"],a:1,w:"16 ÷ 18 × 100 = 88.9%."},
+  {q:"% by mass of carbon in CO₂ (Mr 44):",o:["27.3%","72.7%","50%","12%"],a:0,w:"12 ÷ 44 × 100 = 27.3%."},
+  {q:"Moles in 98 g of H₂SO₄ (Mr 98):",o:["1","2","0.5","98"],a:0,w:"98 ÷ 98 = 1 mol."}
  ],
  exam:[
   {q:"Explain why solid sodium chloride does not conduct electricity, but molten sodium chloride does.",m:3,a:"In the solid the ions are held in fixed positions and cannot move. When molten (or dissolved) the ions are free to move and carry charge, so it conducts."},
@@ -302,7 +325,10 @@ chem:{name:"Chemistry",code:"0620 · Electricity + Stoichiometry",blurb:"Electro
   {q:"Calculate the relative formula mass (Mr) of Ca(OH)₂. (Ca=40, O=16, H=1)",m:2,a:"40 + 2 × (16 + 1) = 40 + 34 = <b>74</b>."},
   {q:"Calculate the number of moles in 44 g of carbon dioxide, CO₂. (Mr = 44)",m:2,a:"moles = mass ÷ Mr = 44 ÷ 44 = <b>1 mol</b>."},
   {q:"Explain why cryolite is used in the extraction of aluminium, and name the product formed at the anode.",m:3,a:"Aluminium oxide has a very high melting point; dissolving it in molten cryolite lets it melt at a lower temperature, saving energy. Anode product: oxygen."},
-  {q:"Concentrated aqueous sodium chloride is electrolysed. Name the products at the cathode, the anode, and the solution left behind.",m:3,a:"Cathode: hydrogen. Anode: chlorine. Solution left behind: sodium hydroxide (NaOH)."}
+  {q:"Concentrated aqueous sodium chloride is electrolysed. Name the products at the cathode, the anode, and the solution left behind.",m:3,a:"Cathode: hydrogen. Anode: chlorine. Solution left behind: sodium hydroxide (NaOH)."},
+  {q:"Calculate the relative formula mass (Mr) of glucose, C₆H₁₂O₆. (C=12, H=1, O=16)",m:2,a:"(6 × 12) + (12 × 1) + (6 × 16) = 72 + 12 + 96 = <b>180</b>."},
+  {q:"Calculate the percentage by mass of oxygen in calcium carbonate, CaCO₃. (Ca=40, C=12, O=16)",m:3,a:"Mr = 40 + 12 + (3 × 16) = 100. Oxygen = 3 × 16 = 48. % = 48 ÷ 100 × 100 = <b>48%</b>."},
+  {q:"Calculate the mass of 0.5 mol of sodium hydroxide, NaOH. (Mr = 40)",m:2,a:"mass = moles × Mr = 0.5 × 40 = <b>20 g</b>."}
  ]
 },
 
@@ -371,19 +397,22 @@ econ:{name:"Economics",code:"0455 · Unit 2.8–2.10",blurb:"Market, failure, mi
   {q:"Negative externalities cause the market to…",o:["Under-produce","Over-produce the harmful good","Stop trading","Set prices too high"],a:1,w:"External costs ignored → too much made."}
  ],
  exam:[
-  {q:"Explain how the price mechanism allocates resources in a market economy.",m:4,a:"High demand raises the price → higher profits attract producers → more is supplied and resources move into that market. Low demand lowers the price → resources move out. Prices act as signals and incentives that guide resources to where they are most wanted."},
-  {q:"Define market failure and give THREE causes.",m:4,a:"Market failure = when resources are not allocated efficiently, so society's welfare is not maximised. Any three causes: externalities · public goods · merit/demerit goods · monopoly power · information failure."},
-  {q:"Using examples, explain the difference between a negative and a positive externality.",m:4,a:"A negative externality is a cost to third parties (e.g. pollution from a factory) — the market over-produces it. A positive externality is a benefit to third parties (e.g. vaccination or education) — the market under-produces it."},
-  {q:"Explain TWO ways a government can discourage the consumption of a demerit good.",m:3,a:"Impose an indirect tax (raises the price so less is consumed) · regulation such as a ban or age limit · information/advertising to correct information failure."},
-  {q:"Explain why public goods are not provided by the free market.",m:3,a:"They are non-excludable (non-payers can't be stopped from using them) and non-rival, so there is a free-rider problem and no profit to be made; firms won't supply them, so the government must."},
-  {q:"Discuss one advantage and one disadvantage of government intervention in a mixed economy.",m:4,a:"Advantage: it corrects market failure — provides public goods, reduces inequality, controls monopolies. Disadvantage: it can be costly and inefficient, cause 'government failure' (making things worse) and reduce incentives through high taxes/red tape."},
-  {q:"Explain the likely effect of a maximum price set below the equilibrium price.",m:3,a:"It is a price ceiling, so quantity demanded exceeds quantity supplied → a shortage develops, which may lead to rationing, queues or waiting lists / a black market."}
+  {q:"State two causes of market failure. [2 — State]",m:2,a:"Any two, just named (no explanation needed): externalities · public goods · merit/demerit goods · monopoly power · information failure."},
+  {q:"State two methods a government can use to intervene in a market. [2 — State]",m:2,a:"Any two: indirect tax · subsidy · regulation / laws · direct state provision · price controls (maximum or minimum price)."},
+  {q:"Define the term 'mixed economy'. [2 — Define]",m:2,a:"An economy that combines a private sector (the market/price mechanism) with a public sector (the government), where the government corrects market failure."},
+  {q:"Explain two advantages of a market economic system. [4 — Explain]",m:4,a:"<b>Two developed points (2 + 2):</b><ul><li><b>Efficiency</b> — resources follow consumer demand through the price mechanism, so what people want is produced and waste is reduced.</li><li><b>Choice & innovation</b> — competition between firms widens choice and drives lower prices and better products as firms compete for profit.</li></ul>Structure tip: point → develop it → say why it's an advantage."},
+  {q:"Explain how a subsidy can increase the consumption of a merit good. [4 — Explain]",m:4,a:"Give a linked chain: a subsidy is a government payment to producers → it lowers their costs of production → supply shifts to the right → the price to consumers falls → so quantity demanded/consumed rises. More of the merit good is consumed, capturing its positive externalities."},
+  {q:"Explain two causes of market failure. [4 — Explain]",m:4,a:"<b>Two developed points:</b><ul><li><b>Negative externalities</b> — production imposes costs on third parties (e.g. pollution) that the market ignores, so the good is over-produced.</li><li><b>Public goods</b> — they are non-excludable and non-rival, so the free-rider problem means firms can't profit and won't supply them.</li></ul>"},
+  {q:"Analyse how an indirect tax on cigarettes affects the market for cigarettes. [6 — Analyse]",m:6,a:"Build a linked chain (a demand & supply diagram helps): the tax raises firms' costs → supply shifts left/up → equilibrium price rises → the higher price causes a contraction in demand → fewer cigarettes are consumed → the external costs of smoking (healthcare, passive smoking) fall. It also raises government revenue. Depth + connected steps = full marks."},
+  {q:"Analyse how a maximum price set below the equilibrium can lead to a shortage. [6 — Analyse]",m:6,a:"Chain: a maximum price (price ceiling) is set below equilibrium → the price can't rise to clear the market → quantity demanded is high but quantity supplied is low → demand exceeds supply → a shortage develops. Consequences: queues, rationing or a black market. Refer to a demand & supply diagram for full marks."},
+  {q:"Discuss whether a government should intervene in a mixed economy. [8 — Discuss]",m:8,a:"<b>For:</b> corrects market failure — provides public goods, taxes demerit goods / subsidises merit goods, controls monopolies, reduces inequality, can stabilise the economy.<br><b>Against:</b> intervention is costly, can cause inefficiency and 'government failure' (making things worse); high taxes/red tape reduce incentives; governments may lack information.<br><b>Evaluation (essential for top marks):</b> it depends on the size/type of market failure and whether the benefit outweighs the cost — targeted intervention is usually justified but should be limited to where the market genuinely fails. Finish with a clear, reasoned judgement."},
+  {q:"Discuss whether the advantages of a market economy outweigh its disadvantages. [8 — Discuss]",m:8,a:"<b>Advantages:</b> efficiency (resources follow demand), consumer choice, competition → lower prices + innovation, profit incentive.<br><b>Disadvantages:</b> inequality, market failure (public goods not provided), monopoly exploitation, ignores social costs like pollution.<br><b>Evaluation:</b> a pure market delivers efficiency and choice but fails society in key areas — which is why most countries choose a mixed economy. Weigh both sides and give a reasoned judgement rather than just listing points."}
  ]
 },
 
 /* ================= MATHS · 0607 ================= */
 math:{name:"Maths",code:"0607 · Ch12 + Ch13",blurb:"Mensuration + quadratics",
- papers:[{name:"Past papers (CIE 0607)",url:"https://pastpapers.papacambridge.com/papers/caie/igcse-cambridge-international-mathematics-0607"}],
+ papers:[{name:"🧪 Dabble sims (interactive)",url:"https://dabble-sim.vercel.app"},{name:"Past papers (CIE 0607)",url:"https://pastpapers.papacambridge.com/papers/caie/igcse-cambridge-international-mathematics-0607"}],
  cards:[
   {t:"Mensuration",f:"Circle: area & circumference",b:"Area = <b>πr²</b> · Circumference = <b>2πr</b> (or πd)."},
   {t:"Mensuration",f:"Area of 2D shapes",b:"Triangle = ½·b·h · Parallelogram = b·h · Trapezium = ½(a+b)·h · Rectangle = l·w."},
@@ -519,7 +548,7 @@ eng:{name:"English",code:"0500 · Comprehension + Summary",blurb:"Reading techni
 
 /* ================= FRENCH · 0520 ================= */
 fr:{name:"French",code:"0520 · Units 1–4",blurb:"Tenses + vocab",
- papers:[{name:"Past papers (CIE 0520)",url:"https://pastpapers.co/cie/?dir=IGCSE/French-0520"}],
+ papers:[{name:"Past papers (CIE 0520)",url:"https://pastpapers.co/cie/?dir=IGCSE/French-0520"},{name:"🎧 Listening practice — Lingua",url:"https://lingua.com/french/listening/"},{name:"🎧 Listening practice — Lingolia",url:"https://francais.lingolia.com/en/listening"}],
  cards:[
   {t:"Présent",f:"Present tense — regular endings",b:"<b>-ER</b> (parler): e, es, e, ons, ez, ent. <b>-IR</b> (finir): is, is, it, issons, issez, issent. <b>-RE</b> (vendre): s, s, —, ons, ez, ent."},
   {t:"Présent",f:"Key irregular present verbs",b:"être (suis, es, est, sommes, êtes, sont) · avoir (ai, as, a, avons, avez, ont) · aller (vais, vas, va, allons, allez, vont) · faire (fais, fais, fait, faisons, faites, font)."},
@@ -550,7 +579,15 @@ fr:{name:"French",code:"0520 · Units 1–4",blurb:"Tenses + vocab",
   {t:"Vocab",f:"Les loisirs (hobbies)",b:"le sport · la musique · lire (to read) · sortir avec des amis · regarder la télé · jouer aux jeux vidéo."},
   {t:"Vocab",f:"Les endroits (places)",b:"la ville (town) · le quartier (neighbourhood) · à la campagne (in the countryside) · le centre commercial (mall) · la gare (station)."},
   {t:"Vocab",f:"Connectives (link words)",b:"et (and) · mais (but) · parce que (because) · donc (so) · aussi (also) · cependant (however) · d'abord / ensuite / enfin (first/then/finally)."},
-  {t:"Vocab",f:"Le temps (weather)",b:"il fait beau (nice) · il fait mauvais (bad) · il pleut (raining) · il neige (snowing) · il fait chaud/froid · il y a du vent (windy)."}
+  {t:"Vocab",f:"Le temps (weather)",b:"il fait beau (nice) · il fait mauvais (bad) · il pleut (raining) · il neige (snowing) · il fait chaud/froid · il y a du vent (windy)."},
+  {t:"Speaking",f:"The speaking assessment — parts",b:"Usually a role-play, a topic presentation/discussion, and a general conversation. Prepare opinions + reasons on common topics: school, family, free time, health, where you live, holidays."},
+  {t:"Speaking",f:"Always justify your opinion",b:"Never just say j'aime — add a reason: j'aime le sport <b>parce que</b> c'est bon pour la santé. Giving reasons and using more than one tense is what unlocks the top marks."},
+  {t:"Speaking",f:"Opinion phrases",b:"à mon avis (in my opinion) · je pense que… · je trouve que… · ce que j'aime, c'est… · d'un côté… d'un autre côté (on one hand… on the other)."},
+  {t:"Speaking",f:"Use three tenses",b:"Aim to use past, present and future: hier <b>j'ai joué</b>… · d'habitude <b>je joue</b>… · demain <b>je vais jouer</b>… A range of tenses = higher marks."},
+  {t:"Speaking",f:"Fluency fillers",b:"alors · eh bien · en fait (in fact) · c'est-à-dire (that is) · tu sais — these buy thinking time and make you sound natural instead of robotic."},
+  {t:"Listening",f:"Listening technique",b:"Read the questions FIRST · listen for keywords, numbers and names · don't panic if you miss a word, keep going · use the second play to check and fill gaps."},
+  {t:"Listening",f:"Watch negatives & tenses",b:"A ne…pas / ne…jamais flips the meaning. Notice time markers — hier (past), maintenant (now), demain (future) — they often decide the correct answer."},
+  {t:"Listening",f:"Revise the answer traps",b:"Numbers, prices, l'heure (time), days & months, and colours/negatives are the most common listening traps — revise them until they're automatic. Practise with the 🎧 links on this page."}
  ],
  quiz:[
   {q:"'I am going to eat' (futur proche):",o:["Je mange","Je vais manger","J'ai mangé","Je mangerai"],a:1,w:"aller + infinitive."},
@@ -580,7 +617,10 @@ fr:{name:"French",code:"0520 · Units 1–4",blurb:"Tenses + vocab",
   {q:"de + le = …",o:["du","des","au","de la"],a:0,w:"de + le = du."},
   {q:"'depuis' + present tense expresses…",o:["the future","something still ongoing (have been)","a command","the past only"],a:1,w:"j'habite ici depuis 5 ans."},
   {q:"'my father' =",o:["ma père","mon père","mes père","son père"],a:1,w:"père is masculine → mon."},
-  {q:"'la sœur' means…",o:["brother","sister","mother","aunt"],a:1,w:"la sœur = sister."}
+  {q:"'la sœur' means…",o:["brother","sister","mother","aunt"],a:1,w:"la sœur = sister."},
+  {q:"'à mon avis' means…",o:["in my opinion","I don't know","of course","never"],a:0,w:"An opinion phrase for the speaking assessment."},
+  {q:"To reach top speaking marks you should…",o:["Use only the present","Give reasons + use several tenses","Speak in English","Say only oui / non"],a:1,w:"Justify opinions and use past, present & future."},
+  {q:"Best FIRST step in a listening exercise:",o:["Write anything down","Read the questions first","Ignore the numbers","Translate every single word"],a:1,w:"Know what to listen for before it plays."}
  ],
  exam:[
   {q:"Translate into French: 'I am going to watch television this evening.'",m:2,a:"Je vais regarder la télévision ce soir."},
@@ -589,7 +629,10 @@ fr:{name:"French",code:"0520 · Units 1–4",blurb:"Tenses + vocab",
   {q:"Translate, minding the agreement: 'She went to the cinema.'",m:2,a:"Elle est allée au cinéma. (être verb → participle agrees, feminine 'allée'.)"},
   {q:"Make this sentence negative: 'Je mange de la viande.'",m:2,a:"Je ne mange pas de viande. (ne … pas around the verb; 'de la' becomes 'de' after a negative.)"},
   {q:"Translate: 'My sisters are taller than me.'",m:2,a:"Mes sœurs sont plus grandes que moi."},
-  {q:"Translate: 'I have been learning French for three years.'",m:2,a:"J'apprends le français depuis trois ans. (present tense + depuis.)"}
+  {q:"Translate: 'I have been learning French for three years.'",m:2,a:"J'apprends le français depuis trois ans. (present tense + depuis.)"},
+  {q:"Speaking prep — say your answer aloud, then check: 'Qu'est-ce que tu as fait le week-end dernier?' (2–3 sentences, passé composé)",m:0,a:"Model: <i>Le week-end dernier, j'ai retrouvé mes amis et nous sommes allés au centre commercial. J'ai acheté un livre et l'après-midi j'ai regardé un film à la maison. C'était super!</i><br>Notice: passé composé (j'ai…, nous sommes allés) + an opinion (c'était super)."},
+  {q:"Speaking prep — answer aloud: 'Décris ta routine quotidienne.' (present tense + reflexive verbs)",m:0,a:"Model: <i>D'habitude, je me lève à six heures et demie, je prends le petit déjeuner, puis je vais au collège. Le soir, je fais mes devoirs et je me couche vers dix heures.</i><br>Notice: reflexives (je me lève, je me couche) + connectives (puis, le soir)."},
+  {q:"Speaking prep — answer aloud: 'Qu'est-ce que tu vas faire pendant les vacances?' (futur proche)",m:0,a:"Model: <i>Pendant les vacances, je vais rendre visite à mes grands-parents. Nous allons voyager et je vais me reposer. À mon avis, ça va être génial!</i><br>Notice: futur proche (je vais + infinitive) + an opinion (à mon avis)."}
  ]
 }
 };
