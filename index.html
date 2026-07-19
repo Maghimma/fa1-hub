@@ -180,7 +180,9 @@ function home(){
     <div class="prog"><span>${NAME}'s overall accuracy</span><span><b>${T.p}%</b> · ${T.c}/${T.a}</span></div>
     <div class="barwrap"><i style="width:${T.p}%"></i></div>
     <div class="subs" id="subs"></div>
-    <div class="foot">Exams 20–24 July · flashcards + quizzes + exam practice for all 7 papers<br><b>Made by Maghimma</b>${T.a?` · <span onclick="reset()" style="cursor:pointer;text-decoration:underline">reset progress</span>`:''}</div>
+    <div class="foot">Exams 20–24 July · flashcards + quizzes + exam practice for all 7 papers<br>
+      🧪 <a href="https://dabble-sim.vercel.app" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px;font-weight:600">Interactive sims on Dabble →</a><br>
+      <b>Made by Maghimma</b>${T.a?` · <span onclick="reset()" style="cursor:pointer;text-decoration:underline">reset progress</span>`:''}</div>
   </div>`;
   const g=document.getElementById('subs');
   ORDER.forEach(k=>{const s=DATA[k];const el=document.createElement('div');el.className='sub';el.onclick=()=>subject(k);
