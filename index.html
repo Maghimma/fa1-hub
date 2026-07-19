@@ -103,8 +103,10 @@ function subject(k){
     {ic:"⚡",h:"Quiz",p:`${s.quiz.length} questions + streak`,go:()=>mcq(k,s.quiz,"Quiz")}];
   if(s.fixes)modes.push({ic:"🪣",h:"Fix Sorter",p:"Match fix → health issue",go:()=>bucket(k)});
   if(s.scen)modes.push({ic:"🎯",h:"Scenario Spotter",p:"Specific answer, not generic",go:()=>mcq(k,s.scen,"Scenario Spotter")});
+  const papers=(s.papers||[]).map(p=>`<a href="${p.url}" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px">${p.name}</a>`).join(' · ');
   app.innerHTML=`<span class="back" onclick="home()">← all subjects</span>
-    <div class="kicker">${s.code}</div><h1>${s.name}</h1><div class="lead">${s.blurb}</div><div class="modes" id="m"></div>`;
+    <div class="kicker">${s.code}</div><h1>${s.name}</h1><div class="lead">${s.blurb}</div><div class="modes" id="m"></div>
+    ${papers?`<div style="margin-top:18px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:12px;font-size:13px;color:var(--mut)">📄 <b style="color:var(--ink)">Past papers &amp; topic questions:</b><br>${papers}</div>`:''}`;
   const m=document.getElementById('m');
   modes.forEach(md=>{const r=document.createElement('div');r.className='mrow';r.onclick=md.go;
     r.innerHTML=`<div class="ic">${md.ic}</div><div><h4>${md.h}</h4><p>${md.p}</p></div><div class="arr">→</div>`;m.appendChild(r);});
@@ -176,7 +178,7 @@ function finish(k,title,msg){
       <button class="btn ghost" onclick="subject('${k}')">Back to ${DATA[k].name}</button>
       <button class="btn" onclick="home()">All subjects</button></div></div>`;
 }
-if(typeof DATA==='undefined'){app.innerHTML='<h1>Couldn\\'t load data.js</h1><p class="lead">Make sure data.js is in the same folder as index.html.</p>';}else{home();}
+if(typeof DATA==='undefined'){app.innerHTML='<h1>Could not load data.js</h1><p class="lead">Make sure data.js is in the same folder as index.html.</p>';}else{home();}
 </script>
 </body>
 </html>
