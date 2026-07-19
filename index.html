@@ -79,25 +79,32 @@
 <script>
 const ISSUES={rsi:"RSI",back:"Back/Neck",eye:"Eyestrain",head:"Headaches"};
 const app=document.getElementById('app');
-let ST={a:0,c:0};
-try{const s=JSON.parse(localStorage.getItem('fa1')||'null');if(s)ST=s;}catch(e){}
-function save(){try{localStorage.setItem('fa1',JSON.stringify(ST));}catch(e){}}
-const pct=()=>ST.a?Math.round(ST.c/ST.a*100):0;
+let ST={};
+try{const s=JSON.parse(localStorage.getItem('fa1v2')||'null');if(s)ST=s;}catch(e){}
+function save(){try{localStorage.setItem('fa1v2',JSON.stringify(ST));}catch(e){}}
+function st(k){return ST[k]||(ST[k]={a:0,c:0});}
+function subPct(k){const o=ST[k];return o&&o.a?Math.round(o.c/o.a*100):0;}
+function tot(){let a=0,c=0;for(const k in ST){a+=ST[k].a;c+=ST[k].c;}return{a,c,p:a?Math.round(c/a*100):0};}
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a;};
-function score(ok){ST.a++;if(ok)ST.c++;save();}
+function score(ok,k){const o=st(k);o.a++;if(ok)o.c++;save();}
+function reset(){if(confirm('Reset all progress across every subject?')){ST={};save();home();}}
 function home(){
+  document.onkeydown=null;
+  const T=tot();
   app.innerHTML=`<div class="kicker">The Indian Public School · Grade 9 IGCSE</div>
     <h1>FA1 Revision Hub</h1>
     <div class="lead">Every subject, your exact portions, built to drill — not just read.</div>
-    <div class="prog"><span>Overall accuracy</span><span><b>${pct()}%</b> · ${ST.c}/${ST.a}</span></div>
-    <div class="barwrap"><i style="width:${pct()}%"></i></div>
+    <div class="prog"><span>Overall accuracy</span><span><b>${T.p}%</b> · ${T.c}/${T.a}</span></div>
+    <div class="barwrap"><i style="width:${T.p}%"></i></div>
     <div class="subs" id="subs"></div>
-    <div class="foot">Exams 20–24 July · flashcards + quizzes for all 7 papers</div>`;
+    <div class="foot">Exams 20–24 July · flashcards + quizzes for all 7 papers${T.a?` · <span onclick="reset()" style="cursor:pointer;text-decoration:underline">reset progress</span>`:''}</div>`;
   const g=document.getElementById('subs');
   ORDER.forEach(k=>{const s=DATA[k];const el=document.createElement('div');el.className='sub';el.onclick=()=>subject(k);
-    el.innerHTML=`<div class="code">${s.code}</div><h3>${s.name}</h3><div class="meta">${s.blurb}</div><span class="pill">${s.cards.length} cards · ${s.quiz.length} Q</span>`;g.appendChild(el);});
+    const done=ST[k]&&ST[k].a;
+    el.innerHTML=`<div class="code">${s.code}</div><h3>${s.name}</h3><div class="meta">${s.blurb}</div><span class="pill">${s.cards.length} cards · ${s.quiz.length} Q</span>${done?`<span class="pill" style="border-color:var(--acc);color:var(--ink)">${subPct(k)}% · ${ST[k].c}/${ST[k].a}</span>`:''}`;g.appendChild(el);});
 }
 function subject(k){
+  document.onkeydown=null;
   const s=DATA[k];
   let modes=[{ic:"🃏",h:"Flashcards",p:`${s.cards.length} cards, flip to recall`,go:()=>flash(k)},
     {ic:"⚡",h:"Quiz",p:`${s.quiz.length} questions + streak`,go:()=>mcq(k,s.quiz,"Quiz")}];
@@ -105,7 +112,9 @@ function subject(k){
   if(s.scen)modes.push({ic:"🎯",h:"Scenario Spotter",p:"Specific answer, not generic",go:()=>mcq(k,s.scen,"Scenario Spotter")});
   const papers=(s.papers||[]).map(p=>`<a href="${p.url}" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px">${p.name}</a>`).join(' · ');
   app.innerHTML=`<span class="back" onclick="home()">← all subjects</span>
-    <div class="kicker">${s.code}</div><h1>${s.name}</h1><div class="lead">${s.blurb}</div><div class="modes" id="m"></div>
+    <div class="kicker">${s.code}</div><h1>${s.name}</h1><div class="lead">${s.blurb}</div>
+    ${ST[k]&&ST[k].a?`<div class="prog"><span>This subject</span><span><b>${subPct(k)}%</b> · ${ST[k].c}/${ST[k].a}</span></div><div class="barwrap"><i style="width:${subPct(k)}%"></i></div>`:''}
+    <div class="modes" id="m"></div>
     ${papers?`<div style="margin-top:18px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:12px;font-size:13px;color:var(--mut)">📄 <b style="color:var(--ink)">Past papers &amp; topic questions:</b><br>${papers}</div>`:''}`;
   const m=document.getElementById('m');
   modes.forEach(md=>{const r=document.createElement('div');r.className='mrow';r.onclick=md.go;
@@ -127,6 +136,10 @@ function flash(k){
     topics.forEach(t=>{const b=document.createElement('button');b.textContent=t;if(t===tf)b.className='on';b.onclick=()=>{tf=t;build();};tp.appendChild(b);});
     document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
     document.getElementById('nx').onclick=()=>{if(i<deck.length-1){i++;render();}else subject(k);};
+    document.onkeydown=(e)=>{
+      if(e.key===' '){e.preventDefault();document.querySelector('.flash').classList.toggle('flip');}
+      else if(e.key==='ArrowRight')document.getElementById('nx').click();
+      else if(e.key==='ArrowLeft')document.getElementById('pv').click();};
   }
   render();
 }
@@ -138,14 +151,19 @@ function mcq(k,list,title){
       <div class="panel"><div class="q">${it.q}</div><div id="o" style="margin-top:12px"></div>
       <div class="fb" id="fb"></div><button class="btn" id="nx" style="display:none">${i<deck.length-1?'Next →':'Results'}</button></div>`;
     const o=document.getElementById('o');
-    it.o.forEach((opt,idx)=>{const b=document.createElement('button');b.className='opt';b.textContent=opt;
-      b.onclick=()=>{if(locked)return;locked=true;const ok=idx===it.a;score(ok);
+    const order=shuffle(it.o.map((_,idx)=>idx));
+    order.forEach((origIdx,pos)=>{const b=document.createElement('button');b.className='opt';b.textContent=(pos+1)+'.  '+it.o[origIdx];b.dataset.oi=origIdx;
+      b.onclick=()=>{if(locked)return;locked=true;const ok=origIdx===it.a;score(ok,k);
         if(ok){streak++;best=Math.max(best,streak);}else streak=0;
-        document.querySelectorAll('.opt').forEach((e,ei)=>{e.disabled=true;if(ei===it.a)e.classList.add('good');else if(ei===idx)e.classList.add('bad');});
+        document.querySelectorAll('.opt').forEach(e=>{e.disabled=true;const oi=+e.dataset.oi;if(oi===it.a)e.classList.add('good');else if(oi===origIdx&&!ok)e.classList.add('bad');});
         const fb=document.getElementById('fb');fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=(ok?'✓ ':'✗ ')+it.w;
         document.getElementById('nx').style.display='inline-block';};
       o.appendChild(b);});
-    document.getElementById('nx').onclick=()=>{if(i<deck.length-1){i++;locked=false;render();}else finish(k,`${title} done`,`Best streak 🔥 ${best}`);};
+    const nx=document.getElementById('nx');
+    nx.onclick=()=>{if(i<deck.length-1){i++;locked=false;render();}else{document.onkeydown=null;finish(k,`${title} done`,`Best streak 🔥 ${best}`);}};
+    document.onkeydown=(e)=>{const opts=document.querySelectorAll('.opt');
+      if(!locked){const n=+e.key;if(n>=1&&n<=opts.length)opts[n-1].click();}
+      else if(e.key===' '||e.key==='Enter'){e.preventDefault();nx.click();}};
   }
   render();
 }
@@ -161,7 +179,7 @@ function bucket(k){
     Object.entries(ISSUES).forEach(([kk,lab])=>{const b=document.createElement('button');b.className='chip';b.textContent=lab;b.dataset.k=kk;
       b.onclick=()=>{if(done)return;b.classList.toggle('sel');sel.has(kk)?sel.delete(kk):sel.add(kk);};ch.appendChild(b);});
     document.getElementById('act').onclick=()=>{
-      if(!done){done=true;const cor=new Set(it.c);const ok=sel.size===cor.size&&[...sel].every(x=>cor.has(x));score(ok);
+      if(!done){done=true;const cor=new Set(it.c);const ok=sel.size===cor.size&&[...sel].every(x=>cor.has(x));score(ok,k);
         document.querySelectorAll('.chip').forEach(c=>{const kk=c.dataset.k;if(cor.has(kk))c.classList.add('good');else if(sel.has(kk))c.classList.add('bad');c.classList.remove('sel');});
         const fb=document.getElementById('fb');fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=(ok?'✓ ':'✗ ')+it.n;
         document.getElementById('act').textContent=i<deck.length-1?'Next →':'Finish';
@@ -171,8 +189,10 @@ function bucket(k){
   render();
 }
 function finish(k,title,msg){
+  document.onkeydown=null;
+  const T=tot();
   app.innerHTML=`<div class="end"><div class="qmeta" style="text-align:center">${title}</div>
-    <div class="big">${pct()}%</div><div class="lead">${ST.c}/${ST.a} correct overall</div>
+    <div class="big">${subPct(k)}%</div><div class="lead">${ST[k].c}/${ST[k].a} in ${DATA[k].name} · ${T.p}% overall</div>
     <p style="color:var(--mut);font-size:14px;margin-top:12px">${msg}</p>
     <div class="row" style="justify-content:center;margin-top:18px">
       <button class="btn ghost" onclick="subject('${k}')">Back to ${DATA[k].name}</button>
