@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FA1 Revision Hub</title>
+<style>
+  :root{
+    --bg:#faf9f7; --surf:#ffffff; --ink:#16181d; --mut:#71767f; --line:#e7e5e1;
+    --acc:#1f2430; --good:#1f9d63; --bad:#c8483f; --goodbg:#eaf6ef; --badbg:#fbeceb; --soft:#f2f1ee;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.55;padding:26px 18px 60px;max-width:680px;margin:0 auto;min-height:100vh}
+  .kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mut);font-weight:600}
+  h1{font-size:27px;font-weight:700;letter-spacing:-.6px;margin-top:3px}
+  .lead{color:var(--mut);font-size:14px;margin-top:4px}
+  .prog{margin:20px 0 6px;font-size:12.5px;color:var(--mut);display:flex;justify-content:space-between;align-items:center}
+  .barwrap{height:6px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:22px}
+  .barwrap>i{display:block;height:100%;width:0;background:var(--acc);transition:width .4s}
+  .subs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .sub{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:.15s;text-align:left}
+  .sub:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .sub .code{font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.5px}
+  .sub h3{font-size:15.5px;margin:3px 0 6px;font-weight:650}
+  .sub .meta{font-size:11.5px;color:var(--mut)}
+  .sub .pill{display:inline-block;margin-top:8px;font-size:10.5px;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:2px 8px}
+  .back{color:var(--mut);font-size:13px;cursor:pointer;display:inline-block;margin-bottom:12px;font-weight:500}
+  .back:hover{color:var(--ink)}
+  .modes{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .mrow{display:flex;align-items:center;gap:14px;background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:15px 16px;cursor:pointer;transition:.15s}
+  .mrow:hover{border-color:var(--ink)}
+  .mrow .ic{font-size:20px;width:26px;text-align:center}
+  .mrow h4{font-size:14.5px;font-weight:600}
+  .mrow p{font-size:12px;color:var(--mut)}
+  .mrow .arr{margin-left:auto;color:var(--mut)}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:8px}
+  .qmeta{font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .q{font-size:17px;font-weight:600}
+  .opt{display:block;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:13px 15px;margin:8px 0;font-size:14px;cursor:pointer;transition:.12s}
+  .opt:hover{border-color:var(--ink)}
+  .opt.good{border-color:var(--good);background:var(--goodbg)}
+  .opt.bad{border-color:var(--bad);background:var(--badbg)}
+  .opt:disabled{cursor:default}
+  .chip{display:inline-block;padding:10px 14px;margin:6px 7px 0 0;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;transition:.12s}
+  .chip.sel{border-color:var(--ink);background:var(--soft)}
+  .chip.good{border-color:var(--good);background:var(--goodbg)}
+  .chip.bad{border-color:var(--bad);background:var(--badbg)}
+  .tpick{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+  .tpick button{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surf);color:var(--mut);cursor:pointer}
+  .tpick button.on{border-color:var(--ink);color:var(--ink);background:var(--soft)}
+  .fb{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13.5px;display:none}
+  .fb.show{display:block}
+  .fb.ok{background:var(--goodbg);border:1px solid var(--good)}
+  .fb.no{background:var(--badbg);border:1px solid var(--bad)}
+  .fb b{color:var(--ink)}
+  .btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer;margin-top:14px}
+  .btn:hover{opacity:.92}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--mut)}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .flash{perspective:1300px;height:265px;margin-top:6px}
+  .fi{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+  .flash.flip .fi{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line);overflow:auto;background:var(--surf)}
+  .face.back{transform:rotateY(180deg);background:var(--soft)}
+  .face .tag{font-size:10.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+  .face .txt{font-size:15.5px;font-weight:600}
+  .face.back .txt{font-size:13px;font-weight:500}
+  .face.back ul{margin:6px 0 0 16px}.face.back li{margin:3px 0}
+  .hint{text-align:center;color:var(--mut);font-size:12px;margin-top:8px}
+  .end{text-align:center;padding:22px 6px}
+  .end .big{font-size:46px;font-weight:800;margin:4px 0;letter-spacing:-1px}
+  .streak{color:var(--ink);font-weight:700}
+  .foot{margin-top:34px;text-align:center;color:var(--mut);font-size:11px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="data.js"></script>
+<script>
+const ISSUES={rsi:"RSI",back:"Back/Neck",eye:"Eyestrain",head:"Headaches"};
+const app=document.getElementById('app');
+let ST={a:0,c:0};
+try{const s=JSON.parse(localStorage.getItem('fa1')||'null');if(s)ST=s;}catch(e){}
+function save(){try{localStorage.setItem('fa1',JSON.stringify(ST));}catch(e){}}
+const pct=()=>ST.a?Math.round(ST.c/ST.a*100):0;
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a;};
+function score(ok){ST.a++;if(ok)ST.c++;save();}
+function home(){
+  app.innerHTML=`<div class="kicker">The Indian Public School · Grade 9 IGCSE</div>
+    <h1>FA1 Revision Hub</h1>
+    <div class="lead">Every subject, your exact portions, built to drill — not just read.</div>
+    <div class="prog"><span>Overall accuracy</span><span><b>${pct()}%</b> · ${ST.c}/${ST.a}</span></div>
+    <div class="barwrap"><i style="width:${pct()}%"></i></div>
+    <div class="subs" id="subs"></div>
+    <div class="foot">Exams 20–24 July · flashcards + quizzes for all 7 papers</div>`;
+  const g=document.getElementById('subs');
+  ORDER.forEach(k=>{const s=DATA[k];const el=document.createElement('div');el.className='sub';el.onclick=()=>subject(k);
+    el.innerHTML=`<div class="code">${s.code}</div><h3>${s.name}</h3><div class="meta">${s.blurb}</div><span class="pill">${s.cards.length} cards · ${s.quiz.length} Q</span>`;g.appendChild(el);});
+}
+function subject(k){
+  const s=DATA[k];
+  let modes=[{ic:"🃏",h:"Flashcards",p:`${s.cards.length} cards, flip to recall`,go:()=>flash(k)},
+    {ic:"⚡",h:"Quiz",p:`${s.quiz.length} questions + streak`,go:()=>mcq(k,s.quiz,"Quiz")}];
+  if(s.fixes)modes.push({ic:"🪣",h:"Fix Sorter",p:"Match fix → health issue",go:()=>bucket(k)});
+  if(s.scen)modes.push({ic:"🎯",h:"Scenario Spotter",p:"Specific answer, not generic",go:()=>mcq(k,s.scen,"Scenario Spotter")});
+  app.innerHTML=`<span class="back" onclick="home()">← all subjects</span>
+    <div class="kicker">${s.code}</div><h1>${s.name}</h1><div class="lead">${s.blurb}</div><div class="modes" id="m"></div>`;
+  const m=document.getElementById('m');
+  modes.forEach(md=>{const r=document.createElement('div');r.className='mrow';r.onclick=md.go;
+    r.innerHTML=`<div class="ic">${md.ic}</div><div><h4>${md.h}</h4><p>${md.p}</p></div><div class="arr">→</div>`;m.appendChild(r);});
+}
+function flash(k){
+  const s=DATA[k];const topics=["All",...[...new Set(s.cards.map(c=>c.t))]];
+  let tf="All",deck=shuffle(s.cards),i=0;
+  const build=()=>{deck=tf==="All"?shuffle(s.cards):shuffle(s.cards.filter(c=>c.t===tf));i=0;render();};
+  function render(){const c=deck[i];
+    app.innerHTML=`<span class="back" onclick="subject('${k}')">← ${s.name}</span>
+      <div class="qmeta">Flashcards</div><div class="tpick" id="tp"></div>
+      <div class="flash" onclick="this.classList.toggle('flip')"><div class="fi">
+        <div class="face"><div class="tag">${c.t}</div><div class="txt">${c.f}</div></div>
+        <div class="face back"><div class="tag">Answer</div><div class="txt">${c.b}</div></div></div></div>
+      <div class="hint">card ${i+1}/${deck.length} · tap to flip</div>
+      <div class="row" style="margin-top:14px"><button class="btn ghost" id="pv">← back</button><button class="btn" id="nx">next →</button></div>`;
+    const tp=document.getElementById('tp');
+    topics.forEach(t=>{const b=document.createElement('button');b.textContent=t;if(t===tf)b.className='on';b.onclick=()=>{tf=t;build();};tp.appendChild(b);});
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
+    document.getElementById('nx').onclick=()=>{if(i<deck.length-1){i++;render();}else subject(k);};
+  }
+  render();
+}
+function mcq(k,list,title){
+  const s=DATA[k];let deck=shuffle(list),i=0,streak=0,best=0,locked=false;
+  function render(){const it=deck[i];
+    app.innerHTML=`<span class="back" onclick="subject('${k}')">← ${s.name}</span>
+      <div class="qmeta">${title} · ${i+1}/${deck.length} ${streak>1?`· <span class="streak">🔥 ${streak}</span>`:''}</div>
+      <div class="panel"><div class="q">${it.q}</div><div id="o" style="margin-top:12px"></div>
+      <div class="fb" id="fb"></div><button class="btn" id="nx" style="display:none">${i<deck.length-1?'Next →':'Results'}</button></div>`;
+    const o=document.getElementById('o');
+    it.o.forEach((opt,idx)=>{const b=document.createElement('button');b.className='opt';b.textContent=opt;
+      b.onclick=()=>{if(locked)return;locked=true;const ok=idx===it.a;score(ok);
+        if(ok){streak++;best=Math.max(best,streak);}else streak=0;
+        document.querySelectorAll('.opt').forEach((e,ei)=>{e.disabled=true;if(ei===it.a)e.classList.add('good');else if(ei===idx)e.classList.add('bad');});
+        const fb=document.getElementById('fb');fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=(ok?'✓ ':'✗ ')+it.w;
+        document.getElementById('nx').style.display='inline-block';};
+      o.appendChild(b);});
+    document.getElementById('nx').onclick=()=>{if(i<deck.length-1){i++;locked=false;render();}else finish(k,`${title} done`,`Best streak 🔥 ${best}`);};
+  }
+  render();
+}
+function bucket(k){
+  const s=DATA[k];let deck=shuffle(s.fixes),i=0,sel=new Set(),done=false;
+  function render(){const it=deck[i];
+    app.innerHTML=`<span class="back" onclick="subject('${k}')">← ${s.name}</span>
+      <div class="qmeta">Fix Sorter · ${i+1}/${deck.length}</div>
+      <div class="panel"><div class="q">“${it.fix}”</div>
+      <div class="lead" style="margin:6px 0 10px">Tap every issue it helps (can be more than one).</div>
+      <div id="ch"></div><div class="fb" id="fb"></div><button class="btn" id="act">Check</button></div>`;
+    const ch=document.getElementById('ch');
+    Object.entries(ISSUES).forEach(([kk,lab])=>{const b=document.createElement('button');b.className='chip';b.textContent=lab;b.dataset.k=kk;
+      b.onclick=()=>{if(done)return;b.classList.toggle('sel');sel.has(kk)?sel.delete(kk):sel.add(kk);};ch.appendChild(b);});
+    document.getElementById('act').onclick=()=>{
+      if(!done){done=true;const cor=new Set(it.c);const ok=sel.size===cor.size&&[...sel].every(x=>cor.has(x));score(ok);
+        document.querySelectorAll('.chip').forEach(c=>{const kk=c.dataset.k;if(cor.has(kk))c.classList.add('good');else if(sel.has(kk))c.classList.add('bad');c.classList.remove('sel');});
+        const fb=document.getElementById('fb');fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=(ok?'✓ ':'✗ ')+it.n;
+        document.getElementById('act').textContent=i<deck.length-1?'Next →':'Finish';
+      }else{if(i<deck.length-1){i++;sel=new Set();done=false;render();}else finish(k,"Fix Sorter done","Crossover trap handled.");}
+    };
+  }
+  render();
+}
+function finish(k,title,msg){
+  app.innerHTML=`<div class="end"><div class="qmeta" style="text-align:center">${title}</div>
+    <div class="big">${pct()}%</div><div class="lead">${ST.c}/${ST.a} correct overall</div>
+    <p style="color:var(--mut);font-size:14px;margin-top:12px">${msg}</p>
+    <div class="row" style="justify-content:center;margin-top:18px">
+      <button class="btn ghost" onclick="subject('${k}')">Back to ${DATA[k].name}</button>
+      <button class="btn" onclick="home()">All subjects</button></div></div>`;
+}
+if(typeof DATA==='undefined'){app.innerHTML='<h1>Couldn\\'t load data.js</h1><p class="lead">Make sure data.js is in the same folder as index.html.</p>';}else{home();}
+</script>
+</body>
+</html>
