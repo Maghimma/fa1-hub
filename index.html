@@ -209,8 +209,8 @@ function subject(k){
     <div class="kicker">${s.code}</div><h1>${s.name}</h1><div class="lead">${s.blurb}</div>
     ${ST[k]&&ST[k].a?`<div class="prog"><span>This subject</span><span><b>${subPct(k)}%</b> · ${ST[k].c}/${ST[k].a}</span></div><div class="barwrap"><i style="width:${subPct(k)}%"></i></div>`:''}
     <div class="modes" id="m"></div>
-    ${sims?`<div style="margin-top:18px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--mut)">🧪 <b style="color:var(--ink)">Play with it — Dabble sims:</b><br>${sims}</div>`:''}
-    ${papers?`<div style="margin-top:12px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--mut)">📄 <b style="color:var(--ink)">Past papers &amp; topic questions:</b><br>${papers}</div>`:''}</div>`;
+    ${papers?`<div style="margin-top:18px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--mut)">📄 <b style="color:var(--ink)">Past papers &amp; topic questions:</b><br>${papers}</div>`:''}
+    ${sims?`<div style="margin-top:12px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--mut)">🧪 <b style="color:var(--ink)">Play with it — Dabble sims:</b><br>${sims}</div>`:''}</div>`;
   const m=document.getElementById('m');
   modes.forEach(md=>{const r=document.createElement('div');r.className='mrow';r.onclick=md.go;
     r.innerHTML=`<div class="ic">${md.ic}</div><div><h4>${md.h}</h4><p>${md.p}</p></div><div class="arr">→</div>`;m.appendChild(r);});
