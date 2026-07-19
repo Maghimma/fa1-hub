@@ -196,16 +196,20 @@ function welcome(){
 /* ---- home ---- */
 function home(){
   document.onkeydown=null;clearMock();drawBar();
-  const T=tot();
+  const T=tot();const mtot=ORDER.reduce((n,k)=>n+missList(k).length,0);
   app.innerHTML=`<div class="wrap top">
     <div class="kicker">IGCSE · Grade 9 · FA1</div>
     <h1>Revision Hub</h1>
     <div class="lead">Every subject, your exact portions — built to drill, not just read.</div>
     <div class="prog"><span>${NAME}'s overall accuracy</span><span><b>${T.p}%</b> · ${T.c}/${T.a}</span></div>
     <div class="barwrap"><i style="width:${T.p}%"></i></div>
+    <div class="row" style="margin:4px 0 2px">
+      <button class="btn" onclick="quickMock()">📄 Quick Mock</button>
+      ${mtot?`<button class="btn ghost" onclick="reviewAll()">🔁 Review Mistakes · ${mtot}</button>`:''}
+    </div>
     <div class="subs" id="subs"></div>
     <div class="foot">Exams 20–24 July · flashcards + quizzes + exam practice for all 7 papers<br>
-      🧪 <a href="https://dabble-sim.vercel.app" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px;font-weight:600">Interactive sims on Dabble →</a><br>
+      <a href="https://dabble-sim.vercel.app" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px;font-weight:600">Dabble</a><br>
       <b>Made by Maghimma</b>${T.a?` · <span onclick="reset()" style="cursor:pointer;text-decoration:underline">reset progress</span>`:''}</div>
   </div>`;
   const g=document.getElementById('subs');
@@ -424,6 +428,63 @@ function mock(k){
     app.innerHTML=html;
   }
   render();MOCKTIMER=setInterval(tick,1000);
+}
+
+/* ---- home: quick mock across all subjects (MCQ, timed) ---- */
+function quickMock(){
+  clearMock();const pool=[];ORDER.forEach(k=>DATA[k].quiz.forEach(it=>pool.push({k,it})));
+  const N=Math.min(12,pool.length);
+  const deck=shuffle(pool).slice(0,N).map(x=>({k:x.k,it:x.it,order:shuffle(x.it.o.map((_,i)=>i))}));
+  const picks=new Array(N).fill(-1);const mins=8;let left=mins*60,i=0,done=false;
+  const fmt=x=>((x/60)|0)+':'+((x%60)<10?'0':'')+(x%60);
+  function tick(){left--;const t=document.getElementById('tmr');if(t){t.textContent='⏱ '+fmt(Math.max(0,left));if(left<=60)t.style.color='var(--bad)';}if(left<=0)grade();}
+  function render(){const d=deck[i];
+    app.innerHTML=`<div class="narrow"><span class="back" id="quit">← quit</span>
+      <div class="qmeta">Quick Mock · all subjects · Q ${i+1}/${N} · <span id="tmr" style="color:${left<=60?'var(--bad)':'var(--mut)'}">⏱ ${fmt(Math.max(0,left))}</span></div>
+      <div class="panel"><div class="qmeta" style="margin-bottom:8px">${DATA[d.k].name}</div><div class="q">${d.it.q}</div><div id="o" style="margin-top:12px"></div>
+        <div class="row" style="margin-top:16px"><button class="btn ghost" id="pv"${i===0?' disabled':''}>← Prev</button><button class="btn ghost" id="nx"${i===N-1?' disabled':''}>Next →</button><button class="btn" id="sub" style="margin-left:auto">Submit</button></div>
+      </div></div>`;
+    document.getElementById('quit').onclick=()=>{if(confirm('Quit the quick mock? It will be lost.')){clearMock();home();}};
+    const o=document.getElementById('o');d.order.forEach(oi=>{const b=document.createElement('button');b.className='opt'+(picks[i]===oi?' sel':'');b.textContent=d.it.o[oi];b.onclick=()=>{picks[i]=oi;render();};o.appendChild(b);});
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
+    document.getElementById('nx').onclick=()=>{if(i<N-1){i++;render();}};
+    document.getElementById('sub').onclick=()=>{if(confirm('Submit now?'))grade();};
+  }
+  function grade(){if(done)return;done=true;clearMock();let correct=0;
+    deck.forEach((d,j)=>{const ok=picks[j]===d.it.a;if(ok)correct++;score(ok,d.k);markMiss(d.k,d.it.q,ok);});
+    const pct=Math.round(correct/N*100);
+    let html=`<div class="narrow"><div class="end"><div class="qmeta" style="text-align:center">Quick Mock · all subjects</div><div class="big">${pct}%</div><div class="lead" style="margin:0 auto">${correct}/${N} correct · ${fmt(mins*60-Math.max(0,left))} used${left<=0?' · ⏱ time up':''}</div></div>
+      <div class="qmeta" style="margin-top:22px">Review</div>`;
+    deck.forEach((d,j)=>{const ok=picks[j]===d.it.a;const your=picks[j]<0?'<i>blank</i>':d.it.o[picks[j]];
+      html+=`<div class="panel" style="margin-top:8px;border-color:${ok?'var(--good)':'var(--bad)'}"><div style="font-weight:600">${ok?'✓':'✗'} <span style="color:var(--mut)">${DATA[d.k].name}:</span> ${d.it.q}</div><div class="lead" style="margin-top:6px">Your answer: ${your}${ok?'':` · Correct: <b style="color:var(--ink)">${d.it.o[d.it.a]}</b>`}<br>${d.it.w}</div></div>`;});
+    html+=`<div class="row" style="justify-content:center;margin:22px 0"><button class="btn ghost" onclick="home()">Home</button><button class="btn" onclick="quickMock()">New quick mock →</button></div></div>`;
+    app.innerHTML=html;
+  }
+  render();MOCKTIMER=setInterval(tick,1000);
+}
+
+/* ---- home: review mistakes across all subjects ---- */
+function reviewAll(){
+  document.onkeydown=null;const deck=[];ORDER.forEach(k=>missList(k).forEach(it=>deck.push({k,it})));
+  if(!deck.length){app.innerHTML=`<div class="narrow"><span class="back" onclick="home()">← home</span><div class="panel" style="margin-top:20px"><div class="q">No mistakes logged yet 🎉</div><div class="lead" style="margin-top:8px">Do some quizzes — anything you get wrong collects here to re-drill.</div></div></div>`;return;}
+  let d=shuffle(deck),i=0;const ans=[],ords=[];
+  function render(){const cur=d[i],k=cur.k,it=cur.it;const locked=ans[i]!==undefined;
+    const order=ords[i]||(ords[i]=shuffle(it.o.map((_,x)=>x)));
+    app.innerHTML=`<div class="narrow"><span class="back" onclick="home()">← home</span>
+      <div class="qmeta">🔁 Review Mistakes · all subjects · ${i+1}/${d.length}</div>
+      <div class="panel"><div class="qmeta" style="margin-bottom:8px">${DATA[k].name}</div><div class="q">${it.q}</div><div id="o" style="margin-top:12px"></div>
+      <div class="fb" id="fb"></div>
+      <div class="row" style="margin-top:14px"><button class="btn ghost" id="pv"${i===0?' disabled':''}>← Prev</button><button class="btn" id="nx" style="${locked?'':'visibility:hidden'}">${i<d.length-1?'Next →':'Done'}</button></div>
+      </div></div>`;
+    const o=document.getElementById('o');
+    order.forEach(oi=>{const b=document.createElement('button');b.className='opt';b.textContent=it.o[oi];
+      if(locked){b.disabled=true;if(oi===it.a)b.classList.add('good');else if(oi===ans[i].picked&&!ans[i].ok)b.classList.add('bad');}
+      b.onclick=()=>{if(ans[i]!==undefined)return;const ok=oi===it.a;ans[i]={picked:oi,ok};score(ok,k);markMiss(k,it.q,ok);render();};o.appendChild(b);});
+    if(locked){const fb=document.getElementById('fb');fb.className='fb show '+(ans[i].ok?'ok':'no');fb.innerHTML=(ans[i].ok?'✓ ':'✗ ')+it.w;}
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
+    const nx=document.getElementById('nx');nx.onclick=()=>{if(!locked)return;if(i<d.length-1){i++;render();}else home();};
+  }
+  render();
 }
 
 /* ---- results ---- */
