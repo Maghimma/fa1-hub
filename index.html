@@ -197,6 +197,7 @@ function subject(k){
   let modes=[{ic:"🃏",h:"Flashcards",p:`${s.cards.length} cards, flip to recall`,go:()=>flash(k)},
     {ic:"⚡",h:"Quiz",p:`${s.quiz.length} questions + streak`,go:()=>mcq(k,s.quiz,"Quiz")}];
   if(s.exam)modes.push({ic:"📝",h:"Exam Practice",p:`${s.exam.length} written questions, self-marked`,go:()=>exam(k)});
+  if(s.speak)modes.push({ic:"🗣️",h:"Speaking Q&amp;A",p:`${s.speak.length} teacher-style questions — type your answer`,go:()=>speakqa(k)});
   if(s.fixes)modes.push({ic:"🪣",h:"Fix Sorter",p:"Match fix → health issue",go:()=>bucket(k)});
   if(s.scen)modes.push({ic:"🎯",h:"Scenario Spotter",p:"Specific answer, not generic",go:()=>mcq(k,s.scen,"Scenario Spotter")});
   const papers=(s.papers||[]).map(p=>`<a href="${p.url}" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px">${p.name}</a>`).join(' · ');
@@ -281,6 +282,30 @@ function exam(k){
     document.querySelectorAll('#mark .chip').forEach(b=>b.onclick=()=>{
       if(marked)return;marked=true;score(b.dataset.v==='1',k);
       if(i<deck.length-1){i++;render();}else finish(k,'Exam Practice done','You self-marked these — revisit any you missed.');});
+  }
+  render();
+}
+
+/* ---- speaking Q&A (teacher asks, you type) ---- */
+function speakqa(k){
+  const s=DATA[k];let deck=shuffle(s.speak),i=0;
+  function render(){const it=deck[i];let marked=false;
+    app.innerHTML=`<div class="narrow"><span class="back" onclick="subject('${k}')">← ${s.name}</span>
+      <div class="qmeta">🗣️ Speaking Q&amp;A · ${i+1}/${deck.length}</div>
+      <div class="panel"><div class="q">${it.q}</div>
+        <div class="lead" style="margin-top:6px">Answer as if your teacher just asked you — type it in French.</div>
+        <textarea class="ta" id="ans" placeholder="Ta réponse en français…"></textarea>
+        <button class="btn full" id="rev">Reveal model answer</button>
+        <div id="model" style="display:none;margin-top:16px">
+          <div class="qmeta">Model answer &amp; tips</div>
+          <div class="mans">${it.a}</div>
+          <div class="qmeta" style="margin-top:16px">How was your answer?</div>
+          <div class="row" id="mark"><button class="chip good" data-v="1">Confident ✓</button><button class="chip bad" data-v="0">Needs work</button></div>
+        </div></div></div>`;
+    document.getElementById('rev').onclick=e=>{document.getElementById('model').style.display='block';e.target.style.display='none';};
+    document.querySelectorAll('#mark .chip').forEach(b=>b.onclick=()=>{
+      if(marked)return;marked=true;score(b.dataset.v==='1',k);
+      if(i<deck.length-1){i++;render();}else finish(k,'Speaking Q&amp;A done','Now say your answers aloud too — fluency comes from repetition.');});
   }
   render();
 }
