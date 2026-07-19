@@ -12,7 +12,22 @@
   :root{
     --bg:#faf9f7; --surf:#ffffff; --ink:#16181d; --mut:#6d7178; --line:#e7e5e1;
     --acc:#1f2430; --good:#1f9d63; --bad:#c8483f; --goodbg:#eaf6ef; --badbg:#fbeceb;
-    --soft:#f3f2ef; --shadow:0 1px 2px rgba(20,22,28,.04),0 8px 24px rgba(20,22,28,.05);
+    --soft:#f3f2ef; --barbg:rgba(250,249,247,.86); --shadow:0 1px 2px rgba(20,22,28,.04),0 8px 24px rgba(20,22,28,.05);
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#15161a; --surf:#1e2026; --ink:#f0efec; --mut:#9a9ea6; --line:#2e313a;
+    --acc:#4a5568; --good:#37b877; --bad:#e06a60; --goodbg:#132b1f; --badbg:#331a18;
+    --soft:#262932; --barbg:rgba(21,22,26,.86); --shadow:0 1px 2px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.28);
+  }}
+  :root[data-theme="light"]{
+    --bg:#faf9f7; --surf:#ffffff; --ink:#16181d; --mut:#6d7178; --line:#e7e5e1;
+    --acc:#1f2430; --good:#1f9d63; --bad:#c8483f; --goodbg:#eaf6ef; --badbg:#fbeceb;
+    --soft:#f3f2ef; --barbg:rgba(250,249,247,.86); --shadow:0 1px 2px rgba(20,22,28,.04),0 8px 24px rgba(20,22,28,.05);
+  }
+  :root[data-theme="dark"]{
+    --bg:#15161a; --surf:#1e2026; --ink:#f0efec; --mut:#9a9ea6; --line:#2e313a;
+    --acc:#4a5568; --good:#37b877; --bad:#e06a60; --goodbg:#132b1f; --badbg:#331a18;
+    --soft:#262932; --barbg:rgba(21,22,26,.86); --shadow:0 1px 2px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.28);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{-webkit-text-size-adjust:100%}
@@ -21,7 +36,7 @@
   .narrow{max-width:660px;margin:0 auto;padding:0 20px}
 
   /* top bar */
-  .bar{position:sticky;top:0;z-index:20;background:rgba(250,249,247,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar{position:sticky;top:0;z-index:20;background:var(--barbg);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .bar .in{max-width:940px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:12px}
   .brand{font-weight:800;font-size:17px;letter-spacing:-.3px;cursor:pointer;color:var(--ink)}
   .brand .dot{color:var(--good)}
@@ -66,6 +81,7 @@
   .opt:hover{border-color:var(--ink)}
   .opt.good{border-color:var(--good);background:var(--goodbg)}
   .opt.bad{border-color:var(--bad);background:var(--badbg)}
+  .opt.sel{border-color:var(--ink);background:var(--soft)}
   .opt:disabled{cursor:default}
   .chip{display:inline-block;padding:10px 14px;margin:6px 7px 0 0;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;transition:.12s;font-family:inherit}
   .chip.sel{border-color:var(--ink);background:var(--soft)}
@@ -142,13 +158,21 @@ function subPct(k){const o=ST[k];return o&&o.a?Math.round(o.c/o.a*100):0;}
 function tot(){let a=0,c=0;for(const k in ST){a+=ST[k].a;c+=ST[k].c;}return{a,c,p:a?Math.round(c/a*100):0};}
 function score(ok,k){const o=st(k);o.a++;if(ok)o.c++;save();}
 function reset(){if(confirm('Reset '+NAME+"'s progress across every subject?")){ST={};save();home();}}
-function switchUser(){document.onkeydown=null;localStorage.removeItem('fa1_name');NAME=null;welcome();}
+function switchUser(){document.onkeydown=null;clearMock();localStorage.removeItem('fa1_name');NAME=null;welcome();}
+function markMiss(k,q,ok){const o=st(k);o.miss=o.miss||[];const idx=o.miss.indexOf(q);if(ok){if(idx>=0)o.miss.splice(idx,1);}else if(idx<0)o.miss.push(q);save();}
+function missList(k){const o=ST[k];if(!o||!o.miss||!o.miss.length)return[];const pool=[...(DATA[k].quiz||[]),...(DATA[k].scen||[])];return pool.filter(it=>o.miss.indexOf(it.q)>=0);}
+
+/* theme */
+let MOCKTIMER=null;
+function clearMock(){if(MOCKTIMER){clearInterval(MOCKTIMER);MOCKTIMER=null;}}
+function curTheme(){return document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');}
+function toggleTheme(){const t=curTheme()==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('fa1_theme',t);}catch(e){}drawBar();}
 
 function drawBar(){
   if(!NAME){bar.innerHTML='';return;}
   bar.className='bar';
   bar.innerHTML=`<div class="in"><span class="brand" onclick="home()">FA1 <span class="dot">·</span> Revision Hub</span>
-    <span class="who">Hi <b>${esc(NAME)}</b> · <a onclick="switchUser()">switch</a></span></div>`;
+    <span class="who"><a onclick="toggleTheme()" title="Toggle light/dark">${curTheme()==='dark'?'☀️':'🌙'}</a> · Hi <b>${esc(NAME)}</b> · <a onclick="switchUser()">switch</a></span></div>`;
 }
 
 /* ---- onboarding ---- */
@@ -171,7 +195,7 @@ function welcome(){
 
 /* ---- home ---- */
 function home(){
-  document.onkeydown=null;drawBar();
+  document.onkeydown=null;clearMock();drawBar();
   const T=tot();
   app.innerHTML=`<div class="wrap top">
     <div class="kicker">IGCSE · Grade 9 · FA1</div>
@@ -194,10 +218,13 @@ function home(){
 
 /* ---- subject ---- */
 function subject(k){
-  document.onkeydown=null;drawBar();
+  document.onkeydown=null;clearMock();drawBar();
   const s=DATA[k];
   let modes=[{ic:"🃏",h:"Flashcards",p:`${s.cards.length} cards, flip to recall`,go:()=>flash(k)},
     {ic:"⚡",h:"Quiz",p:`${s.quiz.length} questions + streak`,go:()=>mcq(k,s.quiz,"Quiz")}];
+  const miss=missList(k);
+  if(miss.length)modes.push({ic:"🔁",h:"Review Mistakes",p:`${miss.length} question${miss.length>1?'s':''} to re-drill`,go:()=>review(k)});
+  modes.push({ic:"📄",h:"Mock Exam",p:`Timed paper · ${Math.min(15,s.quiz.length)} MCQ${s.exam?` + ${Math.min(3,s.exam.length)} written`:''}`,go:()=>mock(k)});
   if(s.exam)modes.push({ic:"📝",h:"Exam Practice",p:`${s.exam.length} written questions, self-marked`,go:()=>exam(k)});
   if(s.speak)modes.push({ic:"🗣️",h:"Speaking Q&amp;A",p:`${s.speak.length} teacher-style questions — type your answer`,go:()=>speakqa(k)});
   if(s.fixes)modes.push({ic:"🪣",h:"Fix Sorter",p:"Match fix → health issue",go:()=>bucket(k)});
@@ -255,7 +282,7 @@ function mcq(k,list,title){
     const o=document.getElementById('o');
     order.forEach((origIdx,pos)=>{const b=document.createElement('button');b.className='opt';b.textContent=(pos+1)+'.  '+it.o[origIdx];b.dataset.oi=origIdx;
       if(locked){b.disabled=true;if(origIdx===it.a)b.classList.add('good');else if(origIdx===ans[i].picked&&!ans[i].ok)b.classList.add('bad');}
-      b.onclick=()=>{if(ans[i]!==undefined)return;const ok=origIdx===it.a;ans[i]={picked:origIdx,ok};score(ok,k);if(ok){streak++;best=Math.max(best,streak);}else streak=0;render();};
+      b.onclick=()=>{if(ans[i]!==undefined)return;const ok=origIdx===it.a;ans[i]={picked:origIdx,ok};score(ok,k);markMiss(k,it.q,ok);if(ok){streak++;best=Math.max(best,streak);}else streak=0;render();};
       o.appendChild(b);});
     if(locked){const fb=document.getElementById('fb');fb.className='fb show '+(ans[i].ok?'ok':'no');fb.innerHTML=(ans[i].ok?'✓ ':'✗ ')+it.w;}
     document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
@@ -351,9 +378,57 @@ function bucket(k){
   render();
 }
 
+/* ---- review mistakes (re-drills what you got wrong) ---- */
+function review(k){const list=missList(k);
+  if(!list.length){app.innerHTML=`<div class="narrow"><span class="back" onclick="subject('${k}')">← ${DATA[k].name}</span><div class="panel" style="margin-top:20px"><div class="q">No mistakes logged yet 🎉</div><div class="lead" style="margin-top:8px">Do a Quiz first — anything you get wrong shows up here to re-drill until you nail it.</div></div></div>`;return;}
+  mcq(k,list,"Review Mistakes");
+}
+
+/* ---- mock exam (timed, mixed, graded only at the end) ---- */
+function mock(k){
+  clearMock();const s=DATA[k];
+  const mcqN=Math.min(15,s.quiz.length),wN=s.exam?Math.min(3,s.exam.length):0,total=mcqN+wN;
+  const mDeck=shuffle(s.quiz).slice(0,mcqN).map(it=>({it,order:shuffle(it.o.map((_,x)=>x))}));
+  const wDeck=wN?shuffle(s.exam).slice(0,wN):[];
+  const picks=new Array(mcqN).fill(-1),wtext=new Array(wN).fill('');
+  const mins=Math.max(8,Math.round(mcqN*0.6)+wN*2);
+  let left=mins*60,i=0,done=false;
+  const fmt=x=>((x/60)|0)+':'+((x%60)<10?'0':'')+(x%60);
+  function tick(){left--;const t=document.getElementById('tmr');if(t){t.textContent='⏱ '+fmt(Math.max(0,left));if(left<=60)t.style.color='var(--bad)';}if(left<=0)grade();}
+  function render(){const isM=i<mcqN;let body;
+    if(isM){const it=mDeck[i].it;body=`<div class="q">${it.q}</div><div id="o" style="margin-top:12px"></div>`;}
+    else{const it=wDeck[i-mcqN];body=`<div class="qmeta" style="margin-bottom:8px">Written · ${it.m?it.m+' mark'+(it.m>1?'s':''):'spoken'}</div><div class="q">${it.q}</div><textarea class="ta" id="ans" placeholder="Type your answer…">${esc(wtext[i-mcqN])}</textarea>`;}
+    app.innerHTML=`<div class="narrow"><span class="back" id="quit">← quit mock</span>
+      <div class="qmeta">Mock Exam · ${s.name} · Q ${i+1}/${total} · <span id="tmr" style="color:${left<=60?'var(--bad)':'var(--mut)'}">⏱ ${fmt(Math.max(0,left))}</span></div>
+      <div class="panel">${body}
+        <div class="row" style="margin-top:16px"><button class="btn ghost" id="pv"${i===0?' disabled':''}>← Prev</button><button class="btn ghost" id="nx"${i===total-1?' disabled':''}>Next →</button><button class="btn" id="sub" style="margin-left:auto">Submit paper</button></div>
+      </div></div>`;
+    document.getElementById('quit').onclick=()=>{if(confirm('Quit the mock exam? This paper will be lost.')){clearMock();subject(k);}};
+    if(isM){const o=document.getElementById('o');mDeck[i].order.forEach(oi=>{const b=document.createElement('button');b.className='opt'+(picks[i]===oi?' sel':'');b.textContent=mDeck[i].it.o[oi];b.onclick=()=>{picks[i]=oi;render();};o.appendChild(b);});}
+    else{const ta=document.getElementById('ans');ta.oninput=()=>wtext[i-mcqN]=ta.value;}
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
+    document.getElementById('nx').onclick=()=>{if(i<total-1){i++;render();}};
+    document.getElementById('sub').onclick=()=>{if(confirm('Submit the paper now?'))grade();};
+  }
+  function grade(){if(done)return;done=true;clearMock();
+    let correct=0;mDeck.forEach((m,j)=>{const ok=picks[j]===m.it.a;if(ok)correct++;score(ok,k);markMiss(k,m.it.q,ok);});
+    const pct=Math.round(correct/mcqN*100);
+    let html=`<div class="narrow"><div class="end"><div class="qmeta" style="text-align:center">Mock Exam · ${s.name}</div>
+      <div class="big">${pct}%</div><div class="lead" style="margin:0 auto">${correct}/${mcqN} multiple-choice correct · ${fmt(mins*60-Math.max(0,left))} used${left<=0?' · ⏱ time up':''}</div></div>
+      <div class="qmeta" style="margin-top:22px">Multiple choice — review</div>`;
+    mDeck.forEach((m,j)=>{const ok=picks[j]===m.it.a;const your=picks[j]<0?'<i>blank</i>':m.it.o[picks[j]];
+      html+=`<div class="panel" style="margin-top:8px;border-color:${ok?'var(--good)':'var(--bad)'}"><div style="font-weight:600">${ok?'✓':'✗'} ${j+1}. ${m.it.q}</div><div class="lead" style="margin-top:6px">Your answer: ${your}${ok?'':` · Correct: <b style="color:var(--ink)">${m.it.o[m.it.a]}</b>`}<br>${m.it.w}</div></div>`;});
+    if(wDeck.length){html+=`<div class="qmeta" style="margin-top:22px">Written — compare with the model answers</div>`;
+      wDeck.forEach((it,j)=>{html+=`<div class="panel" style="margin-top:8px"><div class="q" style="font-size:15px">${it.q}</div><div class="lead" style="margin:8px 0"><b style="color:var(--ink)">You wrote:</b> ${wtext[j]?esc(wtext[j]):'<i>blank</i>'}</div><div class="mans"><b>Model:</b> ${it.a}</div></div>`;});}
+    html+=`<div class="row" style="justify-content:center;margin:22px 0"><button class="btn ghost" onclick="subject('${k}')">Back to ${s.name}</button><button class="btn" onclick="mock('${k}')">New mock →</button></div></div>`;
+    app.innerHTML=html;
+  }
+  render();MOCKTIMER=setInterval(tick,1000);
+}
+
 /* ---- results ---- */
 function finish(k,title,msg){
-  document.onkeydown=null;
+  document.onkeydown=null;clearMock();
   const T=tot();
   app.innerHTML=`<div class="narrow"><div class="end"><div class="qmeta" style="text-align:center">${title}</div>
     <div class="big">${subPct(k)}%</div><div class="lead" style="margin:0 auto">${ST[k].c}/${ST[k].a} in ${DATA[k].name} · ${T.p}% overall</div>
@@ -364,6 +439,7 @@ function finish(k,title,msg){
 }
 
 /* ---- boot ---- */
+try{const th=localStorage.getItem('fa1_theme');if(th)document.documentElement.setAttribute('data-theme',th);}catch(e){}
 if(typeof DATA==='undefined'){app.innerHTML='<div class="narrow" style="padding-top:40px"><h1>Could not load data.js</h1><p class="lead">Make sure data.js is in the same folder as index.html.</p></div>';}
 else{NAME=localStorage.getItem('fa1_name');if(NAME){load();home();}else{welcome();}}
 </script>
