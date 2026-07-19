@@ -202,12 +202,15 @@ function subject(k){
   if(s.speak)modes.push({ic:"🗣️",h:"Speaking Q&amp;A",p:`${s.speak.length} teacher-style questions — type your answer`,go:()=>speakqa(k)});
   if(s.fixes)modes.push({ic:"🪣",h:"Fix Sorter",p:"Match fix → health issue",go:()=>bucket(k)});
   if(s.scen)modes.push({ic:"🎯",h:"Scenario Spotter",p:"Specific answer, not generic",go:()=>mcq(k,s.scen,"Scenario Spotter")});
-  const papers=(s.papers||[]).map(p=>`<a href="${p.url}" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px">${p.name}</a>`).join(' · ');
+  const lnk=p=>`<a href="${p.url}" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px">${p.name}</a>`;
+  const papers=(s.papers||[]).map(lnk).join(' · ');
+  const sims=(s.sims||[]).map(lnk).join(' · ');
   app.innerHTML=`<div class="narrow"><span class="back" onclick="home()">← all subjects</span>
     <div class="kicker">${s.code}</div><h1>${s.name}</h1><div class="lead">${s.blurb}</div>
     ${ST[k]&&ST[k].a?`<div class="prog"><span>This subject</span><span><b>${subPct(k)}%</b> · ${ST[k].c}/${ST[k].a}</span></div><div class="barwrap"><i style="width:${subPct(k)}%"></i></div>`:''}
     <div class="modes" id="m"></div>
-    ${papers?`<div style="margin-top:18px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--mut)">📄 <b style="color:var(--ink)">Past papers &amp; topic questions:</b><br>${papers}</div>`:''}</div>`;
+    ${sims?`<div style="margin-top:18px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--mut)">🧪 <b style="color:var(--ink)">Play with it — Dabble sims:</b><br>${sims}</div>`:''}
+    ${papers?`<div style="margin-top:12px;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--mut)">📄 <b style="color:var(--ink)">Past papers &amp; topic questions:</b><br>${papers}</div>`:''}</div>`;
   const m=document.getElementById('m');
   modes.forEach(md=>{const r=document.createElement('div');r.className='mrow';r.onclick=md.go;
     r.innerHTML=`<div class="ic">${md.ic}</div><div><h4>${md.h}</h4><p>${md.p}</p></div><div class="arr">→</div>`;m.appendChild(r);});
@@ -240,96 +243,109 @@ function flash(k){
 
 /* ---- multiple choice (quiz + scenario) ---- */
 function mcq(k,list,title){
-  const s=DATA[k];let deck=shuffle(list),i=0,streak=0,best=0,locked=false;
-  function render(){const it=deck[i];
+  const s=DATA[k];let deck=shuffle(list),i=0,streak=0,best=0;const ans=[],ords=[];
+  function render(){const it=deck[i];const locked=ans[i]!==undefined;
+    const order=ords[i]||(ords[i]=shuffle(it.o.map((_,idx)=>idx)));
     app.innerHTML=`<div class="narrow"><span class="back" onclick="subject('${k}')">← ${s.name}</span>
       <div class="qmeta">${title} · ${i+1}/${deck.length} ${streak>1?`· <span class="streak">🔥 ${streak}</span>`:''}</div>
       <div class="panel"><div class="q">${it.q}</div><div id="o" style="margin-top:12px"></div>
-      <div class="fb" id="fb"></div><button class="btn" id="nx" style="display:none">${i<deck.length-1?'Next →':'Results'}</button></div></div>`;
+      <div class="fb" id="fb"></div>
+      <div class="row" style="margin-top:14px"><button class="btn ghost" id="pv"${i===0?' disabled':''}>← Prev</button><button class="btn" id="nx" style="${locked?'':'visibility:hidden'}">${i<deck.length-1?'Next →':'Results'}</button></div>
+      </div></div>`;
     const o=document.getElementById('o');
-    const order=shuffle(it.o.map((_,idx)=>idx));
     order.forEach((origIdx,pos)=>{const b=document.createElement('button');b.className='opt';b.textContent=(pos+1)+'.  '+it.o[origIdx];b.dataset.oi=origIdx;
-      b.onclick=()=>{if(locked)return;locked=true;const ok=origIdx===it.a;score(ok,k);
-        if(ok){streak++;best=Math.max(best,streak);}else streak=0;
-        document.querySelectorAll('.opt').forEach(e=>{e.disabled=true;const oi=+e.dataset.oi;if(oi===it.a)e.classList.add('good');else if(oi===origIdx&&!ok)e.classList.add('bad');});
-        const fb=document.getElementById('fb');fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=(ok?'✓ ':'✗ ')+it.w;
-        document.getElementById('nx').style.display='inline-block';};
+      if(locked){b.disabled=true;if(origIdx===it.a)b.classList.add('good');else if(origIdx===ans[i].picked&&!ans[i].ok)b.classList.add('bad');}
+      b.onclick=()=>{if(ans[i]!==undefined)return;const ok=origIdx===it.a;ans[i]={picked:origIdx,ok};score(ok,k);if(ok){streak++;best=Math.max(best,streak);}else streak=0;render();};
       o.appendChild(b);});
+    if(locked){const fb=document.getElementById('fb');fb.className='fb show '+(ans[i].ok?'ok':'no');fb.innerHTML=(ans[i].ok?'✓ ':'✗ ')+it.w;}
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
     const nx=document.getElementById('nx');
-    nx.onclick=()=>{if(i<deck.length-1){i++;locked=false;render();}else{document.onkeydown=null;finish(k,`${title} done`,`Best streak 🔥 ${best}`);}};
+    nx.onclick=()=>{if(!locked)return;if(i<deck.length-1){i++;render();}else{document.onkeydown=null;finish(k,`${title} done`,`Best streak 🔥 ${best}`);}};
     document.onkeydown=(e)=>{const opts=document.querySelectorAll('.opt');
       if(!locked){const n=+e.key;if(n>=1&&n<=opts.length)opts[n-1].click();}
-      else if(e.key===' '||e.key==='Enter'){e.preventDefault();nx.click();}};
+      if(e.key==='ArrowLeft'){e.preventDefault();document.getElementById('pv').click();}
+      else if((e.key==='ArrowRight'||e.key===' '||e.key==='Enter')&&locked){e.preventDefault();nx.click();}};
   }
   render();
 }
 
 /* ---- exam practice (typed + self-marked) ---- */
 function exam(k){
-  const s=DATA[k];let deck=shuffle(s.exam),i=0;
-  function render(){const it=deck[i];let marked=false;
+  const s=DATA[k];let deck=shuffle(s.exam),i=0;const recs=[];
+  function render(){const it=deck[i];const rec=recs[i]||(recs[i]={text:'',revealed:false,pick:-1});
     const mk=it.m?`${it.m} mark${it.m>1?'s':''}`:'spoken practice';
     app.innerHTML=`<div class="narrow"><span class="back" onclick="subject('${k}')">← ${s.name}</span>
       <div class="qmeta">Exam Practice · ${i+1}/${deck.length} · ${mk}</div>
       <div class="panel"><div class="q">${it.q}</div>
-        <textarea class="ta" id="ans" placeholder="${it.m?'Type your answer, then reveal the model answer to mark it…':'Say your answer aloud, then reveal the model answer to compare…'}"></textarea>
-        <button class="btn full" id="rev">Reveal model answer</button>
-        <div id="model" style="display:none;margin-top:16px">
+        <textarea class="ta" id="ans" placeholder="${it.m?'Type your answer, then reveal the model answer to mark it…':'Say your answer aloud, then reveal the model answer to compare…'}">${esc(rec.text)}</textarea>
+        <button class="btn full" id="rev" style="${rec.revealed?'display:none':''}">Reveal model answer</button>
+        <div id="model" style="${rec.revealed?'':'display:none'};margin-top:16px">
           <div class="qmeta">Model answer · ${mk}</div>
           <div class="mans">${it.a}</div>
           <div class="qmeta" style="margin-top:16px">How did you do? (honest = better signal)</div>
           <div class="row" id="mark"><button class="chip good" data-v="1">Got it ✓</button><button class="chip" data-v="1">Partly</button><button class="chip bad" data-v="0">Missed ✗</button></div>
-        </div></div></div>`;
-    document.getElementById('rev').onclick=e=>{document.getElementById('model').style.display='block';e.target.style.display='none';};
-    document.querySelectorAll('#mark .chip').forEach(b=>b.onclick=()=>{
-      if(marked)return;marked=true;score(b.dataset.v==='1',k);
-      if(i<deck.length-1){i++;render();}else finish(k,'Exam Practice done','You self-marked these — revisit any you missed.');});
+        </div>
+        <div class="row" style="margin-top:14px"><button class="btn ghost" id="pv"${i===0?' disabled':''}>← Prev</button><button class="btn" id="nx">${i<deck.length-1?'Next →':'Results'}</button></div>
+      </div></div>`;
+    const ta=document.getElementById('ans');ta.oninput=()=>rec.text=ta.value;
+    document.getElementById('rev').onclick=e=>{rec.revealed=true;document.getElementById('model').style.display='block';e.target.style.display='none';};
+    document.querySelectorAll('#mark .chip').forEach((b,bi)=>{if(rec.pick>=0){b.disabled=true;if(bi===rec.pick)b.classList.add('sel');}
+      b.onclick=()=>{if(rec.pick>=0)return;rec.pick=bi;score(b.dataset.v==='1',k);render();};});
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
+    document.getElementById('nx').onclick=()=>{if(i<deck.length-1){i++;render();}else finish(k,'Exam Practice done','You self-marked these — revisit any you missed.');};
   }
   render();
 }
 
 /* ---- speaking Q&A (teacher asks, you type) ---- */
 function speakqa(k){
-  const s=DATA[k];let deck=shuffle(s.speak),i=0;
-  function render(){const it=deck[i];let marked=false;
+  const s=DATA[k];let deck=shuffle(s.speak),i=0;const recs=[];
+  function render(){const it=deck[i];const rec=recs[i]||(recs[i]={text:'',revealed:false,pick:-1});
     app.innerHTML=`<div class="narrow"><span class="back" onclick="subject('${k}')">← ${s.name}</span>
       <div class="qmeta">🗣️ Speaking Q&amp;A · ${i+1}/${deck.length}</div>
       <div class="panel"><div class="q">${it.q}</div>
         <div class="lead" style="margin-top:6px">Answer as if your teacher just asked you — type it in French.</div>
-        <textarea class="ta" id="ans" placeholder="Ta réponse en français…"></textarea>
-        <button class="btn full" id="rev">Reveal model answer</button>
-        <div id="model" style="display:none;margin-top:16px">
+        <textarea class="ta" id="ans" placeholder="Ta réponse en français…">${esc(rec.text)}</textarea>
+        <button class="btn full" id="rev" style="${rec.revealed?'display:none':''}">Reveal model answer</button>
+        <div id="model" style="${rec.revealed?'':'display:none'};margin-top:16px">
           <div class="qmeta">Model answer &amp; tips</div>
           <div class="mans">${it.a}</div>
           <div class="qmeta" style="margin-top:16px">How was your answer?</div>
           <div class="row" id="mark"><button class="chip good" data-v="1">Confident ✓</button><button class="chip bad" data-v="0">Needs work</button></div>
-        </div></div></div>`;
-    document.getElementById('rev').onclick=e=>{document.getElementById('model').style.display='block';e.target.style.display='none';};
-    document.querySelectorAll('#mark .chip').forEach(b=>b.onclick=()=>{
-      if(marked)return;marked=true;score(b.dataset.v==='1',k);
-      if(i<deck.length-1){i++;render();}else finish(k,'Speaking Q&amp;A done','Now say your answers aloud too — fluency comes from repetition.');});
+        </div>
+        <div class="row" style="margin-top:14px"><button class="btn ghost" id="pv"${i===0?' disabled':''}>← Prev</button><button class="btn" id="nx">${i<deck.length-1?'Next →':'Results'}</button></div>
+      </div></div>`;
+    const ta=document.getElementById('ans');ta.oninput=()=>rec.text=ta.value;
+    document.getElementById('rev').onclick=e=>{rec.revealed=true;document.getElementById('model').style.display='block';e.target.style.display='none';};
+    document.querySelectorAll('#mark .chip').forEach((b,bi)=>{if(rec.pick>=0){b.disabled=true;if(bi===rec.pick)b.classList.add('sel');}
+      b.onclick=()=>{if(rec.pick>=0)return;rec.pick=bi;score(b.dataset.v==='1',k);render();};});
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
+    document.getElementById('nx').onclick=()=>{if(i<deck.length-1){i++;render();}else finish(k,'Speaking Q&amp;A done','Now say your answers aloud too — fluency comes from repetition.');};
   }
   render();
 }
 
 /* ---- fix sorter (ICT) ---- */
 function bucket(k){
-  const s=DATA[k];let deck=shuffle(s.fixes),i=0,sel=new Set(),done=false;
-  function render(){const it=deck[i];
+  const s=DATA[k];let deck=shuffle(s.fixes),i=0;const recs=[];
+  function render(){const it=deck[i];const rec=recs[i]||(recs[i]={sel:new Set(),done:false,ok:false});const cor=new Set(it.c);
     app.innerHTML=`<div class="narrow"><span class="back" onclick="subject('${k}')">← ${s.name}</span>
       <div class="qmeta">Fix Sorter · ${i+1}/${deck.length}</div>
       <div class="panel"><div class="q">“${it.fix}”</div>
       <div class="lead" style="margin:6px 0 10px">Tap every issue it helps (can be more than one).</div>
-      <div id="ch"></div><div class="fb" id="fb"></div><button class="btn" id="act">Check</button></div></div>`;
+      <div id="ch"></div><div class="fb" id="fb"></div>
+      <div class="row" style="margin-top:6px"><button class="btn ghost" id="pv"${i===0?' disabled':''}>← Prev</button><button class="btn" id="act">${rec.done?(i<deck.length-1?'Next →':'Finish'):'Check'}</button></div>
+      </div></div>`;
     const ch=document.getElementById('ch');
     Object.entries(ISSUES).forEach(([kk,lab])=>{const b=document.createElement('button');b.className='chip';b.textContent=lab;b.dataset.k=kk;
-      b.onclick=()=>{if(done)return;b.classList.toggle('sel');sel.has(kk)?sel.delete(kk):sel.add(kk);};ch.appendChild(b);});
+      if(rec.done){if(cor.has(kk))b.classList.add('good');else if(rec.sel.has(kk))b.classList.add('bad');}
+      else if(rec.sel.has(kk))b.classList.add('sel');
+      b.onclick=()=>{if(rec.done)return;b.classList.toggle('sel');rec.sel.has(kk)?rec.sel.delete(kk):rec.sel.add(kk);};ch.appendChild(b);});
+    if(rec.done){const fb=document.getElementById('fb');fb.className='fb show '+(rec.ok?'ok':'no');fb.innerHTML=(rec.ok?'✓ ':'✗ ')+it.n;}
+    document.getElementById('pv').onclick=()=>{if(i>0){i--;render();}};
     document.getElementById('act').onclick=()=>{
-      if(!done){done=true;const cor=new Set(it.c);const ok=sel.size===cor.size&&[...sel].every(x=>cor.has(x));score(ok,k);
-        document.querySelectorAll('.chip').forEach(c=>{const kk=c.dataset.k;if(cor.has(kk))c.classList.add('good');else if(sel.has(kk))c.classList.add('bad');c.classList.remove('sel');});
-        const fb=document.getElementById('fb');fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=(ok?'✓ ':'✗ ')+it.n;
-        document.getElementById('act').textContent=i<deck.length-1?'Next →':'Finish';
-      }else{if(i<deck.length-1){i++;sel=new Set();done=false;render();}else finish(k,"Fix Sorter done","Crossover trap handled.");}
+      if(!rec.done){rec.done=true;rec.ok=rec.sel.size===cor.size&&[...rec.sel].every(x=>cor.has(x));score(rec.ok,k);render();}
+      else{if(i<deck.length-1){i++;render();}else finish(k,"Fix Sorter done","Crossover trap handled.");}
     };
   }
   render();

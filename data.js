@@ -124,7 +124,8 @@ ict:{name:"ICT",code:"0417 · Ch5 + 6.1–6.5",blurb:"Effects of IT + Applicatio
 
 /* ================= PHYSICS · 0625 · Forces · Thermal · Waves ================= */
 phys:{name:"Physics",code:"0625 · Forces · Thermal · Waves",blurb:"Moments, pressure, heat, waves",
- papers:[{name:"🧪 Dabble sims (interactive)",url:"https://dabble-sim.vercel.app"},{name:"Past papers (CIE 0625)",url:"https://pastpapers.co/cie/?dir=IGCSE/Physics-0625"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/physics/cie/"}],
+ papers:[{name:"Past papers (CIE 0625)",url:"https://pastpapers.co/cie/?dir=IGCSE/Physics-0625"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/physics/cie/"}],
+ sims:[{name:"🪝 Hooke's Law",url:"https://dabble-sim.vercel.app/hooke.html"},{name:"⚖️ Moments",url:"https://dabble-sim.vercel.app/moments.html"},{name:"📦 Centre of Gravity",url:"https://dabble-sim.vercel.app/gravity.html"},{name:"💧 Pressure",url:"https://dabble-sim.vercel.app/pressure.html"},{name:"🌊 Waves & Refraction",url:"https://dabble-sim.vercel.app/waves.html"},{name:"〰️ Wave Motion",url:"https://dabble-sim.vercel.app/wavemotion.html"}],
  cards:[
   {t:"Moments",f:"Moment — definition & formula",b:"Turning effect of a force about a pivot. <b>Moment = force × perpendicular distance</b> from the pivot. Unit: N·m."},
   {t:"Moments",f:"Everyday moment examples",b:"Door handle (force far from hinge), spanner, seesaw, scissors, crowbar, wheelbarrow — a longer distance gives a bigger moment for the same force."},
@@ -242,7 +243,8 @@ phys:{name:"Physics",code:"0625 · Forces · Thermal · Waves",blurb:"Moments, p
 
 /* ================= CHEMISTRY · 0620 ================= */
 chem:{name:"Chemistry",code:"0620 · Electricity + Stoichiometry",blurb:"Electrolysis + molar mass",
- papers:[{name:"🧪 Dabble sims (interactive)",url:"https://dabble-sim.vercel.app"},{name:"Past papers (CIE 0620)",url:"https://pastpapers.co/cie/?dir=IGCSE/Chemistry-0620"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/chemistry/cie/"}],
+ papers:[{name:"Past papers (CIE 0620)",url:"https://pastpapers.co/cie/?dir=IGCSE/Chemistry-0620"},{name:"Topic questions (Save My Exams)",url:"https://www.savemyexams.com/igcse/chemistry/cie/"}],
+ sims:[{name:"🔋 Electrolysis",url:"https://dabble-sim.vercel.app/electrolysis.html"},{name:"🔌 Electroplating & Refining",url:"https://dabble-sim.vercel.app/electroplating.html"},{name:"🧮 Stoichiometry",url:"https://dabble-sim.vercel.app/stoichiometry.html"},{name:"⚖️ Balancing Equations",url:"https://dabble-sim.vercel.app/balancing.html"}],
  cards:[
   {t:"Electrolysis",f:"What is electrolysis?",b:"The breakdown of an ionic compound (molten or in aqueous solution) using electricity, into its elements."},
   {t:"Electrolysis",f:"Key terms",b:"<b>Electrolyte</b> = ionic compound that conducts. <b>Anode</b> = positive electrode. <b>Cathode</b> = negative electrode. <b>Inert</b> electrode = doesn't react (platinum/carbon)."},
@@ -412,7 +414,8 @@ econ:{name:"Economics",code:"0455 · Unit 2.8–2.10",blurb:"Market, failure, mi
 
 /* ================= MATHS · 0607 ================= */
 math:{name:"Maths",code:"0607 · Ch12 + Ch13",blurb:"Mensuration + quadratics",
- papers:[{name:"🧪 Dabble sims (interactive)",url:"https://dabble-sim.vercel.app"},{name:"Past papers (CIE 0607)",url:"https://pastpapers.papacambridge.com/papers/caie/igcse-cambridge-international-mathematics-0607"}],
+ papers:[{name:"Past papers (CIE 0607)",url:"https://pastpapers.papacambridge.com/papers/caie/igcse-cambridge-international-mathematics-0607"}],
+ sims:[{name:"🧊 3D Solids (mensuration)",url:"https://dabble-sim.vercel.app/solids.html"},{name:"📈 Graph Transformations (quadratics)",url:"https://dabble-sim.vercel.app/graphs.html"}],
  cards:[
   {t:"Mensuration",f:"Circle: area & circumference",b:"Area = <b>πr²</b> · Circumference = <b>2πr</b> (or πd)."},
   {t:"Mensuration",f:"Area of 2D shapes",b:"Triangle = ½·b·h · Parallelogram = b·h · Trapezium = ½(a+b)·h · Rectangle = l·w."},
